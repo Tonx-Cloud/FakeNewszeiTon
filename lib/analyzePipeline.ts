@@ -22,7 +22,7 @@ Content to analyze:
 ${normalized}`
 
   const genai = getGemini()
-  const model = genai.getGenerativeModel({ model: process.env.GEMINI_MODEL || 'gemini-1.5-flash' })
+  const model = genai.getGenerativeModel({ model: process.env.GEMINI_MODEL || 'gemini-2.0-flash' })
 
   const result = await model.generateContent(prompt)
   const response = await result.response
