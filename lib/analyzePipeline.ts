@@ -128,6 +128,27 @@ function buildReportMarkdown(parsed: any): string {
 export async function analyzePipeline(inputType: string, content: string) {
   const fingerprint = crypto.createHash('sha256').update(content || '').digest('hex')
 
+  // Self-reference guard: skip AI analysis for our own domain
+  if (inputType === 'link') {
+    try {
+      const urlObj = new URL(content.trim())
+      if (urlObj.hostname.includes('fakenewszeiton') || urlObj.hostname.includes('fake-newszei-ton')) {
+        const selfResult = {
+          ok: true as const,
+          meta: { id: crypto.randomUUID(), createdAt: new Date().toISOString(), inputType, language: 'pt-BR', mode: 'self_reference', warnings: [], fingerprint },
+          scores: { fakeProbability: 0, verifiableTruth: 100, biasFraming: 0, manipulationRisk: 0 },
+          summary: { headline: 'Site oficial', oneParagraph: 'Este e o site oficial do FakeNewsZeiTon, nao sujeito a analise de fake news.', verdict: 'Provavel verdadeiro' as const },
+          claims: [],
+          similar: { searchQueries: [], externalChecks: [] },
+          recommendations: [],
+          reportMarkdown: '',
+        }
+        selfResult.reportMarkdown = buildReportMarkdown(selfResult)
+        return selfResult
+      }
+    } catch { /* URL invalida — continua normalmente */ }
+  }
+
   const genai = getGemini()
   const model = genai.getGenerativeModel({ model: process.env.GEMINI_MODEL || 'gemini-2.0-flash' })
 
