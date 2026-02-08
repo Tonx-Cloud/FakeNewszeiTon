@@ -30,8 +30,10 @@ export async function extractFromUrl(url: string): Promise<ExtractionResult> {
   }
 
   if (isYouTubeUrl(trimmed)) {
+    console.log(`[extractor] Routing to YouTube extractor for: ${trimmed.slice(0, 80)}`)
     return extractYouTubeTranscript(trimmed)
   }
 
+  console.log(`[extractor] Routing to web extractor for: ${trimmed.slice(0, 80)}`)
   return extractWebContent(trimmed)
 }

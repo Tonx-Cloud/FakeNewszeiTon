@@ -5,7 +5,7 @@ import { createServerSupabase } from '@/lib/supabaseServer'
 import { checkRateLimitAsync } from '@/lib/rateLimitUpstash'
 import { verifyTurnstile } from '@/lib/auth/turnstile'
 import { analyzeSchema, sanitizeForLLM, isValidUrl } from '@/lib/validations'
-import { extractFromUrl } from '@/lib/services/extractor'
+import { extractFromUrl, isYouTubeUrl } from '@/lib/services/extractor'
 
 export const runtime = 'nodejs'
 
@@ -73,6 +73,7 @@ export async function POST(req: Request) {
     // ── 5. Extract content from URL if inputType=link ──
     let textForAnalysis = content
     let sourceUrl: string | undefined
+    let effectiveInputType: string = inputType  // track if it becomes youtube_transcript
     const extractionWarnings: string[] = []
 
     if (inputType === 'link') {
@@ -84,9 +85,13 @@ export async function POST(req: Request) {
         }, { status: 400 })
       }
 
+      const isYT = isYouTubeUrl(content.trim())
+      console.log(`[api/analyze] URL extraction — isYouTube: ${isYT}, url: ${content.trim().slice(0, 100)}`)
+
       const extraction = await extractFromUrl(content.trim())
 
       if (!extraction.ok || !extraction.text) {
+        console.warn(`[api/analyze] Extraction failed: ${extraction.error}`)
         return NextResponse.json({
           ok: false,
           error: 'EXTRACTION_FAILED',
@@ -97,18 +102,20 @@ export async function POST(req: Request) {
       textForAnalysis = extraction.text
       sourceUrl = extraction.sourceUrl
       extractionWarnings.push(...extraction.warnings)
+
+      if (isYT) {
+        effectiveInputType = 'youtube_transcript'
+        console.log(`[api/analyze] YouTube transcript obtained: ${textForAnalysis.length} chars`)
+      }
     }
 
-    // ── 6. Sanitize text before LLM (text and link types) ──
-    if (inputType === 'text' || inputType === 'link') {
+    // ── 6. Sanitize text before LLM (text, link and youtube types) ──
+    if (effectiveInputType === 'text' || effectiveInputType === 'youtube_transcript' || inputType === 'link') {
       textForAnalysis = sanitizeForLLM(textForAnalysis, 10_000)
     }
 
     // ── 7. Run analysis pipeline ──
-    const result = await analyzePipeline(
-      inputType === 'link' ? 'text' : inputType,
-      textForAnalysis,
-    )
+    const result = await analyzePipeline(effectiveInputType, textForAnalysis)
 
     // Attach extraction metadata
     if (sourceUrl) {

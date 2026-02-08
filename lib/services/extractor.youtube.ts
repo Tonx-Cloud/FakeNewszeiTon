@@ -12,6 +12,7 @@ export async function extractYouTubeTranscript(url: string): Promise<ExtractionR
   const match = url.match(YOUTUBE_ID_REGEX)
 
   if (!match || !match[1]) {
+    console.error('[yt-extractor] Could not extract videoId from URL:', url)
     return {
       ok: false,
       error: 'Não foi possível identificar o ID do vídeo no link do YouTube.',
@@ -20,50 +21,70 @@ export async function extractYouTubeTranscript(url: string): Promise<ExtractionR
   }
 
   const videoId = match[1]
+  console.log(`[yt-extractor] Detected YouTube video: ${videoId} from URL: ${url}`)
 
   try {
     // Dynamic import to avoid bundling issues
     const { YoutubeTranscript } = await import('youtube-transcript')
 
-    const transcriptItems = await YoutubeTranscript.fetchTranscript(videoId, {
-      lang: 'pt',
-    })
+    console.log(`[yt-extractor] Fetching transcript for ${videoId} (lang: pt)...`)
+    let transcriptItems: any[] | null = null
+    let usedFallbackLang = false
 
-    if (!transcriptItems || transcriptItems.length === 0) {
-      // Try without language preference
-      const fallbackItems = await YoutubeTranscript.fetchTranscript(videoId).catch(() => null)
-
-      if (!fallbackItems || fallbackItems.length === 0) {
-        return {
-          ok: false,
-          error: 'Inconclusivo: este vídeo não possui legenda/transcrição disponível para análise. Cole a transcrição ou envie o áudio.',
-          warnings,
-        }
-      }
-
-      warnings.push('Transcrição obtida em idioma alternativo (não pt-BR).')
-      const text = fallbackItems.map(item => item.text).join(' ').trim()
-      return buildTranscriptResult(text, videoId, url, warnings)
+    try {
+      transcriptItems = await YoutubeTranscript.fetchTranscript(videoId, { lang: 'pt' })
+    } catch (ptErr: any) {
+      console.log(`[yt-extractor] PT transcript failed: ${ptErr?.message}. Trying without lang...`)
     }
 
-    const text = transcriptItems.map(item => item.text).join(' ').trim()
-    return buildTranscriptResult(text, videoId, url, warnings)
-  } catch (err: any) {
-    const msg = err?.message || ''
+    // Fallback: try without language preference
+    if (!transcriptItems || transcriptItems.length === 0) {
+      try {
+        transcriptItems = await YoutubeTranscript.fetchTranscript(videoId)
+        usedFallbackLang = true
+      } catch (fallbackErr: any) {
+        console.error(`[yt-extractor] Fallback transcript also failed: ${fallbackErr?.message}`)
+        transcriptItems = null
+      }
+    }
 
-    // Common error: transcript disabled
-    if (msg.includes('disabled') || msg.includes('not available') || msg.includes('Could not')) {
+    if (!transcriptItems || transcriptItems.length === 0) {
+      console.warn(`[yt-extractor] No transcript available for ${videoId}`)
       return {
         ok: false,
-        error: 'Inconclusivo: este vídeo não possui legenda/transcrição disponível para análise. Cole a transcrição ou envie o áudio.',
-        warnings,
+        error: 'Este vídeo não possui legendas públicas disponíveis. Não é possível analisar sem texto.',
+        warnings: ['youtube_no_public_transcript'],
+      }
+    }
+
+    if (usedFallbackLang) {
+      warnings.push('Transcrição obtida em idioma alternativo (não pt-BR).')
+    }
+
+    const text = transcriptItems.map((item: any) => item.text).join(' ').trim()
+    console.log(`[yt-extractor] Transcript obtained: ${text.length} chars, ${transcriptItems.length} segments`)
+
+    return buildTranscriptResult(text, videoId, url, warnings)
+  } catch (err: any) {
+    const msg = err?.message || String(err)
+    console.error(`[yt-extractor] Fatal error for ${videoId}:`, msg)
+
+    // Distinguish between "no captions" vs "technical error"
+    const noCaptionPatterns = ['disabled', 'not available', 'Could not', 'Transcript is disabled', 'No transcript']
+    const isNoCaptions = noCaptionPatterns.some(p => msg.toLowerCase().includes(p.toLowerCase()))
+
+    if (isNoCaptions) {
+      return {
+        ok: false,
+        error: 'Este vídeo não possui legendas públicas disponíveis. Não é possível analisar sem texto.',
+        warnings: ['youtube_no_public_transcript'],
       }
     }
 
     return {
       ok: false,
-      error: `Erro ao obter transcrição do YouTube: ${msg || 'erro desconhecido'}. Cole a transcrição ou envie o áudio.`,
-      warnings,
+      error: `Erro técnico ao obter transcrição do YouTube (${msg.slice(0, 100)}). Tente novamente em instantes.`,
+      warnings: ['youtube_extraction_error'],
     }
   }
 }
@@ -84,11 +105,12 @@ function buildTranscriptResult(
     .replace(/&quot;/g, '"')
     .trim()
 
-  if (cleaned.length < 100) {
+  if (cleaned.length < 200) {
+    console.warn(`[yt-extractor] Transcript too short: ${cleaned.length} chars for ${videoId}`)
     return {
       ok: false,
-      error: 'Inconclusivo: transcrição muito curta para análise. Cole a transcrição completa ou envie o áudio.',
-      warnings,
+      error: 'Este vídeo possui legenda muito curta para uma análise confiável.',
+      warnings: [...warnings, 'youtube_transcript_too_short'],
     }
   }
 

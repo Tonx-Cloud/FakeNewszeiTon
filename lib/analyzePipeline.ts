@@ -13,6 +13,9 @@ RULES:
 - Use neutral language, no partisan rhetoric
 - When analyzing images, describe what you see and evaluate text/claims visible in the image
 - When analyzing audio transcriptions, evaluate the spoken claims
+- When analyzing YouTube transcripts, treat them as primary source content — do NOT say you cannot access the video
+- NEVER ask the user to provide a manual transcription — you always receive the content directly
+- NEVER say "I don't have access to the content" — the content is always provided to you
 - For externalChecks, think about whether any major fact-checking organizations (Agencia Lupa, Aos Fatos, Fato ou Fake/g1, Estadao Verifica, AFP Checamos, Reuters Fact Check, AP Fact Check, PolitiFact, Snopes) have likely covered this topic. If so, include objects with title, url, publisher, and summary fields. If not sure, return an empty array.
 
 Return ONLY valid JSON (no markdown fences) with these fields:
@@ -176,6 +179,9 @@ export async function analyzePipeline(inputType: string, content: string) {
       const normalized = content.slice(0, 20000)
       parts.push({ text: `${SYSTEM_PROMPT}\n\nContent to analyze:\n${normalized}` })
     }
+  } else if (inputType === 'youtube_transcript') {
+    const normalized = content.slice(0, 20000)
+    parts.push({ text: `${SYSTEM_PROMPT}\n\nThe following is an AUTOMATICALLY EXTRACTED transcript from a YouTube video. Analyze the spoken claims, statements and information for signs of disinformation, bias or manipulation. Do NOT say you cannot access the video — the transcript text below IS the video content.\n\nYouTube transcript:\n${normalized}` })
   } else {
     const normalized = content.slice(0, 20000)
     parts.push({ text: `${SYSTEM_PROMPT}\n\nContent to analyze:\n${normalized}` })
