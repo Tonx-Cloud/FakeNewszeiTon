@@ -28,7 +28,7 @@ export default function Nav({ variant = 'standard' }: NavProps) {
         Fake <span className="text-[#1d9bf0]">News</span> Verificaton
       </a>
 
-      <div className="flex items-center gap-4">
+      <div className="flex items-center gap-2 sm:gap-4">
         {[
           { href: '/alerts', label: 'Alertas' },
           { href: '/subscribe', label: 'Inscrever-se' },
@@ -38,7 +38,7 @@ export default function Nav({ variant = 'standard' }: NavProps) {
           <a
             key={link.href}
             href={link.href}
-            className={`text-xs transition ${linkClass}`}
+            className={`text-xs whitespace-nowrap transition ${linkClass}`}
           >
             {link.label}
           </a>

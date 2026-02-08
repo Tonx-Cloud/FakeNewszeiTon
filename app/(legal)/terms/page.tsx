@@ -25,7 +25,12 @@ export default function TermsPage() {
           O Fake News Verificaton é uma ferramenta gratuita e independente de análise de conteúdos para identificação de sinais de desinformação, viés e manipulação, utilizando inteligência artificial (Gemini AI) como assistência.
         </p>
 
-        <h2>2. Natureza da análise</h2>
+        <h2>2. Neutralidade e imparcialidade</h2>
+        <p>
+          O Serviço é <strong>apartidário e não possui viés ideológico</strong>. A análise avalia exclusivamente afirmações factuais e evidências, independentemente de quem as emitiu. O Serviço não se posiciona politicamente e trata todos os conteúdos com o mesmo rigor metodológico, conforme descrito na nossa <a href="/methodology">Metodologia</a>.
+        </p>
+
+        <h2>3. Natureza da análise</h2>
         <ul>
           <li>A análise é <strong>assistida por IA</strong> e <strong>não substitui</strong> checagem profissional de agências de fact-checking.</li>
           <li>Os resultados são indicativos e não devem ser considerados como verdade absoluta.</li>
@@ -33,17 +38,22 @@ export default function TermsPage() {
           <li>Quando não há base suficiente para concluir, o resultado será &quot;Inconclusivo&quot;.</li>
         </ul>
 
-        <h2>3. Uso aceitável</h2>
+        <h2>4. Uso aceitável</h2>
         <p>Você concorda em:</p>
         <ul>
           <li>Utilizar o serviço apenas para fins legítimos de verificação de informações.</li>
           <li>Não submeter conteúdo ilegal, difamatório, ameaçador ou que viole direitos de terceiros.</li>
-          <li>Não tentar burlar mecanismos de segurança (rate limiting, captcha).</li>
-          <li>Não utilizar bots, scrapers ou automação para acessar o serviço de forma abusiva.</li>
+          <li>Não tentar burlar mecanismos de segurança (rate limiting, CAPTCHA, tokens).</li>
+          <li>Não utilizar bots, scrapers, automação ou qualquer ferramenta para acessar o serviço de forma abusiva ou automatizada.</li>
           <li>Não utilizar o serviço para gerar ou disseminar desinformação.</li>
         </ul>
 
-        <h2>4. Limitação de responsabilidade</h2>
+        <h2>5. Proteção e segurança</h2>
+        <p>
+          O Serviço emprega mecanismos de segurança como <strong>CAPTCHA (Cloudflare Turnstile)</strong>, <strong>rate limiting (Upstash)</strong> e <strong>tokens assinados</strong> para proteger contra abuso. Tentativas de burlar essas proteções podem resultar em bloqueio temporário ou permanente.
+        </p>
+
+        <h2>6. Limitação de responsabilidade</h2>
         <ul>
           <li>O serviço é fornecido &quot;como está&quot; (as is), sem garantias de qualquer natureza.</li>
           <li>Não garantimos a precisão, completude ou atualidade das análises.</li>
@@ -51,7 +61,7 @@ export default function TermsPage() {
           <li>O serviço pode apresentar indisponibilidade temporária sem aviso prévio.</li>
         </ul>
 
-        <h2>5. Propriedade intelectual</h2>
+        <h2>7. Propriedade intelectual</h2>
         <p>
           O código-fonte do Fake News Verificaton está disponível em repositório público. A marca, design e conteúdo editorial são de propriedade do desenvolvedor.
         </p>
@@ -59,31 +69,35 @@ export default function TermsPage() {
           Os relatórios de análise gerados são de livre uso do usuário para fins de informação e compartilhamento.
         </p>
 
-        <h2>6. Privacidade e dados</h2>
+        <h2>8. Privacidade e dados</h2>
         <p>
           O tratamento de dados pessoais está descrito na nossa{' '}
           <a href="/privacy">Política de Privacidade</a>, que é parte integrante destes Termos.
         </p>
 
-        <h2>7. Inscrição em alertas</h2>
+        <h2>9. Inscrição e cancelamento de alertas</h2>
         <p>
-          Ao se inscrever para receber alertas, você consente expressamente com o envio de e-mails contendo resumos e alertas de desinformação. Você pode cancelar a qualquer momento através do link presente nos e-mails ou entrando em contato conosco.
+          Ao se inscrever para receber alertas, você consente expressamente com o envio de e-mails contendo resumos e alertas de desinformação. A inscrição utiliza <strong>double opt-in</strong> (confirmação por e-mail).
+        </p>
+        <p>
+          Você pode cancelar a qualquer momento pela{' '}
+          <a href="/subscribe">página de inscrição</a> (aba &quot;Cancelar inscrição&quot;), pelo link presente nos e-mails, ou entrando em contato conosco. Ao cancelar, seus dados serão removidos conforme a LGPD.
         </p>
 
-        <h2>8. Modificações</h2>
+        <h2>10. Modificações</h2>
         <p>
           Reservamo-nos o direito de modificar estes Termos a qualquer momento. Alterações significativas serão comunicadas no site. O uso continuado do serviço após alterações constitui aceitação dos novos termos.
         </p>
 
-        <h2>9. Legislação aplicável</h2>
+        <h2>11. Legislação aplicável</h2>
         <p>
           Estes Termos são regidos pelas leis da República Federativa do Brasil. Fica eleito o foro da comarca do domicílio do usuário para dirimir quaisquer questões decorrentes destes Termos.
         </p>
 
-        <h2>10. Contato</h2>
+        <h2>12. Contato</h2>
         <p>
           Para dúvidas sobre estes Termos:{' '}
-          <a href="mailto:contato@fakenewsverificaton.com.br">contato@fakenewsverificaton.com.br</a>
+          <a href="mailto:fakeNewsVerificator@gmail.com">fakeNewsVerificator@gmail.com</a>
         </p>
       </article>
 
