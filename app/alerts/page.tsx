@@ -36,7 +36,7 @@ export default async function AlertsPage() {
         {(!trending || trending.length === 0) ? (
           <div className="text-center py-12">
             <p className="text-slate-400 dark:text-slate-500 text-sm">Nenhum item em alta ainda.</p>
-            <p className="text-slate-300 dark:text-slate-600 text-xs mt-2">Faca uma analise na pagina inicial para comecar a popular esta lista.</p>
+            <p className="text-slate-300 dark:text-slate-600 text-xs mt-2">Faça uma análise na página inicial para começar a popular esta lista.</p>
           </div>
         ) : (
           <div className="space-y-3">
@@ -65,7 +65,7 @@ export default async function AlertsPage() {
                 <div className="flex gap-4 mt-2 text-xs text-slate-400 dark:text-slate-500">
                   <span>Visto {item.occurrences || 1}x</span>
                   {item.last_seen && (
-                    <span>Ultimo: {new Date(item.last_seen).toLocaleDateString('pt-BR')}</span>
+                    <span>Último: {new Date(item.last_seen).toLocaleDateString('pt-BR')}</span>
                   )}
                 </div>
               </div>
@@ -93,7 +93,7 @@ export default async function AlertsPage() {
                 Logado como <strong>{user.email}</strong>
               </p>
               <p className="text-xs text-slate-400 dark:text-slate-500">
-                Notificacoes por email: {profile?.notify_enabled ? 'Ativadas' : 'Desativadas'}
+                Notificações por email: {profile?.notify_enabled ? 'Ativadas' : 'Desativadas'}
                 {profile?.notify_enabled && ` (${profile?.notify_frequency || 'daily'})`}
               </p>
             </div>

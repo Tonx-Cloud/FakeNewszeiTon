@@ -57,7 +57,7 @@ function buildReportMarkdown(parsed: any): string {
   let md = ''
 
   // ── Section 1: Result
-  md += `# 📰 Resultado da Analise\n\n`
+  md += `# 📰 Resultado da Análise\n\n`
   md += `### ${verdictEmoji} Veredito: ${summary.verdict || 'Inconclusivo'}\n\n`
   md += `**${summary.headline || ''}**\n\n`
   md += `${summary.oneParagraph || ''}\n\n`
@@ -65,20 +65,20 @@ function buildReportMarkdown(parsed: any): string {
 
   // ── Section 2: Scores
   md += `## 📊 Scores\n\n`
-  md += `| Metrica | Valor | Nivel |\n`
+  md += `| Métrica | Valor | Nível |\n`
   md += `|---------|------:|-------|\n`
   md += `| Risco de fake | ${s.fakeProbability ?? 0}% | ${riskEmoji(s.fakeProbability ?? 0)} |\n`
-  md += `| Verificavel | ${s.verifiableTruth ?? 0}% | ${riskEmoji(100 - (s.verifiableTruth ?? 0))} |\n`
-  md += `| Vies / Framing | ${s.biasFraming ?? 0}% | ${riskEmoji(s.biasFraming ?? 0)} |\n`
-  md += `| Risco de manipulacao | ${s.manipulationRisk ?? 0}% | ${riskEmoji(s.manipulationRisk ?? 0)} |\n\n`
+  md += `| Verificável | ${s.verifiableTruth ?? 0}% | ${riskEmoji(100 - (s.verifiableTruth ?? 0))} |\n`
+  md += `| Viés / Framing | ${s.biasFraming ?? 0}% | ${riskEmoji(s.biasFraming ?? 0)} |\n`
+  md += `| Risco de manipulação | ${s.manipulationRisk ?? 0}% | ${riskEmoji(s.manipulationRisk ?? 0)} |\n\n`
 
   // ── Section 3: Claims
   if (claims.length > 0) {
-    md += `## 🔍 Avaliacao das afirmacoes\n\n`
+    md += `## 🔍 Avaliação das afirmações\n\n`
     claims.forEach((c: any, i: number) => {
       md += `### ${i + 1}. "${c.claim}"\n\n`
-      md += `- **Avaliacao:** ${c.assessment}\n`
-      md += `- **Confianca:** ${c.confidence ?? '?'}%\n\n`
+      md += `- **Avaliação:** ${c.assessment}\n`
+      md += `- **Confiança:** ${c.confidence ?? '?'}%\n\n`
     })
   }
 
@@ -98,29 +98,29 @@ function buildReportMarkdown(parsed: any): string {
   }
 
   // ── Section 5: Recommendations
-  md += `## 💡 Recomendacoes\n\n`
+  md += `## 💡 Recomendações\n\n`
   if (recs.length > 0) {
     recs.forEach((r: string, i: number) => { md += `${i + 1}. ${r}\n` })
   } else {
-    md += `1. Verifique as afirmacoes em agencias de checagem profissionais\n`
-    md += `2. Compare com multiplas fontes antes de compartilhar\n`
-    md += `3. Desconfie de conteudos com apelo emocional exagerado\n`
-    md += `4. Observe se ha fontes citadas e se sao confiaveis\n`
+    md += `1. Verifique as afirmações em agências de checagem profissionais\n`
+    md += `2. Compare com múltiplas fontes antes de compartilhar\n`
+    md += `3. Desconfie de conteúdos com apelo emocional exagerado\n`
+    md += `4. Observe se há fontes citadas e se são confiáveis\n`
   }
   md += `\n`
 
   // ── Section 6: Search queries
   const queries = similar.searchQueries || []
   if (queries.length > 0) {
-    md += `## 🔎 Pesquise voce mesmo\n\n`
+    md += `## 🔎 Pesquise você mesmo\n\n`
     queries.forEach((q: string) => { md += `- \`${q}\`\n` })
     md += `\n`
   }
 
   // ── Footer
   md += `---\n\n`
-  md += `*Analise assistida por IA (Gemini). Nao substitui checagem profissional.*\n`
-  md += `*Consulte: [Agencia Lupa](https://lupa.uol.com.br), [Aos Fatos](https://aosfatos.org), [Fato ou Fake](https://g1.globo.com/fato-ou-fake)*\n`
+  md += `*Análise assistida por IA (Gemini). Não substitui checagem profissional.*\n`
+  md += `*Consulte: [Agência Lupa](https://lupa.uol.com.br), [Aos Fatos](https://aosfatos.org), [Fato ou Fake](https://g1.globo.com/fato-ou-fake)*\n`
 
   return md
 }
@@ -141,7 +141,7 @@ export async function analyzePipeline(inputType: string, content: string) {
           ok: true as const,
           meta: { id: crypto.randomUUID(), createdAt: new Date().toISOString(), inputType, language: 'pt-BR', mode: 'self_reference', warnings: [], fingerprint },
           scores: { fakeProbability: 0, verifiableTruth: 100, biasFraming: 0, manipulationRisk: 0 },
-          summary: { headline: 'Site oficial do Fake News Verificaton', oneParagraph: 'Este e o site oficial do Fake News Verificaton. O sistema nao analisa o proprio dominio.', verdict: 'Provavel verdadeiro' as const },
+          summary: { headline: 'Site oficial do Fake News Verificaton', oneParagraph: 'Este é o site oficial do Fake News Verificaton. O sistema não analisa o próprio domínio.', verdict: 'Provavel verdadeiro' as const },
           claims: [],
           similar: { searchQueries: [], externalChecks: [] },
           recommendations: [],
@@ -195,9 +195,9 @@ export async function analyzePipeline(inputType: string, content: string) {
     parsed = JSON.parse(txt)
   } catch {
     parsed = {
-      meta: { id: crypto.randomUUID(), createdAt: new Date().toISOString(), inputType, language: 'pt-BR', mode: 'mvp_no_external_sources', warnings: ['Analise baseada apenas no conteudo fornecido. Nao substitui verificacao profissional.'] },
+      meta: { id: crypto.randomUUID(), createdAt: new Date().toISOString(), inputType, language: 'pt-BR', mode: 'mvp_no_external_sources', warnings: ['Análise baseada apenas no conteúdo fornecido. Não substitui verificação profissional.'] },
       scores: { fakeProbability: 50, verifiableTruth: 20, biasFraming: 40, manipulationRisk: 30 },
-      summary: { headline: 'Resultado Inconclusivo', oneParagraph: 'Nao ha base suficiente para uma conclusao definitiva. Recomendamos verificar em fontes confiaveis.', verdict: 'Inconclusivo' },
+      summary: { headline: 'Resultado Inconclusivo', oneParagraph: 'Não há base suficiente para uma conclusão definitiva. Recomendamos verificar em fontes confiáveis.', verdict: 'Inconclusivo' },
       claims: [],
       similar: { searchQueries: [], externalChecks: [] },
       recommendations: []

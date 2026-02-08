@@ -23,7 +23,7 @@ export default function AuthPage() {
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault()
     if (!email.trim() || !supabase) {
-      setError('Configuracao Supabase indisponivel.')
+      setError('Configuração Supabase indisponível.')
       return
     }
     setLoading(true)
@@ -56,7 +56,7 @@ export default function AuthPage() {
           </div>
           <h1 className="text-xl font-semibold mb-2 dark:text-white">Verifique seu email</h1>
           <p className="text-sm text-slate-500 dark:text-slate-400">
-            Enviamos um link magico para <strong className="dark:text-slate-200">{email}</strong>.
+            Enviamos um link mágico para <strong className="dark:text-slate-200">{email}</strong>.
             <br />Clique no link para entrar.
           </p>
           <button
@@ -78,7 +78,7 @@ export default function AuthPage() {
       <div className="max-w-md mx-auto px-6 pt-12 pb-16">
         <h1 className="text-xl font-semibold mb-2 dark:text-white">Entrar no Fake News Verificaton</h1>
         <p className="text-sm text-slate-500 dark:text-slate-400 mb-6">
-          Use seu email para receber um link magico de acesso. Sem senha necessaria.
+          Use seu email para receber um link mágico de acesso. Sem senha necessária.
         </p>
 
         <form onSubmit={handleLogin} className="space-y-4">
@@ -106,12 +106,12 @@ export default function AuthPage() {
             disabled={loading || !email.trim()}
             className="w-full bg-gradient-to-r from-brand-600 to-purple-600 hover:from-brand-700 hover:to-purple-700 text-white py-3.5 rounded-2xl font-semibold text-base shadow-lg shadow-brand-500/25 disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-200"
           >
-            {loading ? 'Enviando...' : 'Enviar link magico'}
+            {loading ? 'Enviando...' : 'Enviar link mágico'}
           </button>
         </form>
 
         <p className="text-xs text-slate-400 dark:text-slate-500 mt-6 text-center">
-          Ao entrar, voce pode salvar historico de analises e receber alertas de fakes em alta.
+          Ao entrar, você pode salvar histórico de análises e receber alertas de fakes em alta.
         </p>
       </div>
 

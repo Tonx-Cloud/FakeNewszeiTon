@@ -38,20 +38,20 @@ const TABS: { key: TabType; label: string; icon: string }[] = [
   { key: 'text', label: 'Texto', icon: '📝' },
   { key: 'link', label: 'Link', icon: '🔗' },
   { key: 'image', label: 'Imagem', icon: '🖼️' },
-  { key: 'audio', label: 'Audio', icon: '🎙️' },
+  { key: 'audio', label: 'Áudio', icon: '🎙️' },
 ]
 
 /* ─── Sources config ─── */
 const SOURCES = [
-  { name: 'Agencia Lupa', url: 'https://lupa.uol.com.br', desc: 'Maior agencia de fact-checking do Brasil.' },
-  { name: 'Aos Fatos', url: 'https://aosfatos.org', desc: 'Checagem apartidaria e transparente.' },
-  { name: 'Fato ou Fake', url: 'https://g1.globo.com/fato-ou-fake', desc: 'Servico de checagem do portal g1.' },
-  { name: 'Estadao Verifica', url: 'https://politica.estadao.com.br/verificacao', desc: 'Nucleo de verificacao do Estadao.' },
-  { name: 'AFP Checamos', url: 'https://checar.afp.com', desc: 'Agencia France-Presse em portugues.' },
+  { name: 'Agência Lupa', url: 'https://lupa.uol.com.br', desc: 'Maior agência de fact-checking do Brasil.' },
+  { name: 'Aos Fatos', url: 'https://aosfatos.org', desc: 'Checagem apartidária e transparente.' },
+  { name: 'Fato ou Fake', url: 'https://g1.globo.com/fato-ou-fake', desc: 'Serviço de checagem do portal g1.' },
+  { name: 'Estadão Verifica', url: 'https://politica.estadao.com.br/verificacao', desc: 'Núcleo de verificação do Estadão.' },
+  { name: 'AFP Checamos', url: 'https://checar.afp.com', desc: 'Agência France-Presse em português.' },
   { name: 'Reuters Fact Check', url: 'https://www.reuters.com/fact-check', desc: 'Fact-checking da Reuters global.' },
   { name: 'AP Fact Check', url: 'https://www.ap.org/fact-check', desc: 'Checagem da Associated Press.' },
   { name: 'PolitiFact', url: 'https://www.politifact.com', desc: 'Premiado com Pulitzer (EUA).' },
-  { name: 'Snopes', url: 'https://www.snopes.com', desc: 'Referencia global em desmistificacao.' },
+  { name: 'Snopes', url: 'https://www.snopes.com', desc: 'Referência global em desmistificação.' },
 ]
 
 export default function Home() {
@@ -79,7 +79,7 @@ export default function Home() {
   const handleAnalyze = async () => {
     if (!content.trim()) return
     if (content.length > MAX_UPLOAD_SIZE) {
-      setApiError({ ok: false, error: 'TOO_LARGE', message: 'Arquivo muito grande (max ~4.5 MB). Tente um menor.' })
+      setApiError({ ok: false, error: 'TOO_LARGE', message: 'Arquivo muito grande (máx. ~4.5 MB). Tente um menor.' })
       setLoading('error'); return
     }
     setLoading('loading'); setApiError(null)
@@ -88,14 +88,14 @@ export default function Home() {
       const data = await res.json()
       if (!res.ok || !data.ok) { setApiError(data as ApiError); setLoading('error') }
       else { setReport(data as ReportResult); setLoading('success') }
-    } catch { setApiError({ ok: false, error: 'NETWORK_ERROR', message: 'Erro de conexao. Tente novamente.' }); setLoading('error') }
+    } catch { setApiError({ ok: false, error: 'NETWORK_ERROR', message: 'Erro de conexão. Tente novamente.' }); setLoading('error') }
   }
 
   const copyWhatsApp = () => {
     const txt = `Oi! Recebi aquela mensagem e resolvi analisar com o Fake News Verificaton.\nResultado: ${report?.summary?.verdict || 'Inconclusivo'} (risco de fake: ${report?.scores?.fakeProbability || 0}%).\nConfira em: fakenewsverificaton.com.br`
     navigator.clipboard.writeText(txt); setWhatsCopied(true); setTimeout(() => setWhatsCopied(false), 2000)
   }
-  const copyReport = () => { navigator.clipboard.writeText(report?.reportMarkdown || ''); alert('Relatorio copiado!') }
+  const copyReport = () => { navigator.clipboard.writeText(report?.reportMarkdown || ''); alert('Relatório copiado!') }
   const downloadReport = () => {
     const b = new Blob([report?.reportMarkdown || ''], { type: 'text/markdown' })
     const u = URL.createObjectURL(b); const a = document.createElement('a'); a.href = u; a.download = 'relatorio-fakenewsverificaton.md'; a.click(); URL.revokeObjectURL(u)
@@ -118,10 +118,10 @@ export default function Home() {
             Fake <span className="text-[#1d9bf0]">News</span> Verificaton
           </h1>
           <p className="text-white/50 text-sm sm:text-base leading-relaxed mb-3 max-w-md mx-auto">
-            Verifique as informacoes antes de compartilhar.
+            Verifique as informações antes de compartilhar.
           </p>
           <p className="text-white/30 text-xs">
-            Analise assistida por IA. Nao substitui checagem profissional.
+            Análise assistida por IA. Não substitui checagem profissional.
           </p>
           <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-white/5 border border-white/10 text-white/40 text-xs mt-6">
             <span className="inline-block w-1.5 h-1.5 bg-[#1d9bf0] rounded-full animate-pulse-slow" />
@@ -135,9 +135,9 @@ export default function Home() {
         <h2 className="text-center text-lg font-semibold mb-8 dark:text-white">Como funciona</h2>
         <div className="grid grid-cols-3 gap-4">
           {[
-            { icon: '📋', title: 'Cole o conteudo', desc: 'Texto, link, imagem ou audio' },
-            { icon: '🔍', title: 'IA analisa', desc: 'Sinais de manipulacao e vies' },
-            { icon: '📊', title: 'Receba o relatorio', desc: 'Scores, veredito e fontes' },
+            { icon: '📋', title: 'Cole o conteúdo', desc: 'Texto, link, imagem ou áudio' },
+            { icon: '🔍', title: 'IA analisa', desc: 'Sinais de manipulação e viés' },
+            { icon: '📊', title: 'Receba o relatório', desc: 'Scores, veredito e fontes' },
           ].map((step, i) => (
             <div key={i} className="step-connector flex flex-col items-center">
               <div className="card-hover w-20 h-20 sm:w-24 sm:h-24 bg-white dark:bg-slate-800 rounded-2xl shadow-md flex items-center justify-center text-3xl sm:text-4xl mb-3 border border-slate-100 dark:border-slate-700">
@@ -175,7 +175,7 @@ export default function Home() {
             <textarea
               value={content}
               onChange={(e) => setContent(e.target.value)}
-              placeholder="Cole aqui o texto que deseja verificar..."
+              placeholder="Cole aqui o texto que deseja verificar…"
               className="w-full h-40 resize-none text-sm bg-transparent focus:outline-none placeholder-slate-400 dark:placeholder-slate-500 dark:text-white"
             />
           )}
@@ -184,7 +184,7 @@ export default function Home() {
               type="url"
               value={content}
               onChange={(e) => setContent(e.target.value)}
-              placeholder="Cole o link da publicacao (ex: https://...)"
+              placeholder="Cole o link da publicação (ex: https://…)"
               className="w-full text-sm py-2 bg-transparent focus:outline-none placeholder-slate-400 dark:text-white"
             />
           )}
@@ -192,7 +192,7 @@ export default function Home() {
             <div className="text-center py-10">
               <div className="text-4xl mb-3">{activeTab === 'image' ? '🖼️' : '🎙️'}</div>
               <p className="text-sm text-slate-400 mb-4">
-                {activeTab === 'image' ? 'Envie uma imagem (max 4.5 MB)' : 'Envie um audio (max 4.5 MB)'}
+                {activeTab === 'image' ? 'Envie uma imagem (máx. 4,5 MB)' : 'Envie um áudio (máx. 4,5 MB)'}
               </p>
               <label className="inline-flex items-center gap-2 px-5 py-2.5 bg-brand-50 dark:bg-brand-900/30 text-brand-600 dark:text-brand-300 rounded-xl text-sm font-medium cursor-pointer hover:bg-brand-100 dark:hover:bg-brand-900/50 transition">
                 Escolher arquivo
@@ -203,7 +203,7 @@ export default function Home() {
                   onChange={(e) => {
                     const file = e.target.files?.[0]
                     if (file) {
-                      if (file.size > MAX_UPLOAD_SIZE) { setApiError({ ok: false, error: 'TOO_LARGE', message: 'Arquivo muito grande (max ~4.5 MB).' }); setLoading('error'); return }
+                      if (file.size > MAX_UPLOAD_SIZE) { setApiError({ ok: false, error: 'TOO_LARGE', message: 'Arquivo muito grande (máx. ~4,5 MB).' }); setLoading('error'); return }
                       const reader = new FileReader(); reader.onload = (ev) => setContent(ev.target?.result as string); reader.readAsDataURL(file)
                     }
                   }}
@@ -236,10 +236,10 @@ export default function Home() {
               <div>
                 <h4 className="text-sm font-medium text-amber-800 dark:text-amber-200">Ops! Algo deu errado</h4>
                 <p className="text-xs text-amber-700 dark:text-amber-300 mt-1">
-                  {apiError.error === 'SERVER_MISCONFIG' ? 'Chave da IA nao configurada. Verifique GEMINI_API_KEY no Vercel.' :
-                   apiError.error === 'RATE_LIMITED' ? 'Muitas requisicoes. Aguarde um minuto.' :
+                  {apiError.error === 'SERVER_MISCONFIG' ? 'Chave da IA não configurada. Verifique GEMINI_API_KEY no Vercel.' :
+                   apiError.error === 'RATE_LIMITED' ? 'Muitas requisições. Aguarde um minuto.' :
                    apiError.error === 'TOO_LARGE' ? apiError.message :
-                   'Servidor nao conseguiu analisar. Tente novamente.'}
+                   'Servidor não conseguiu analisar. Tente novamente.'}
                 </p>
               </div>
             </div>
@@ -269,9 +269,9 @@ export default function Home() {
             <div className="space-y-3 mb-6">
               {([
                 { key: 'fakeProbability', label: 'Risco de fake', color: 'bg-red-500' },
-                { key: 'verifiableTruth', label: 'Verificavel', color: 'bg-green-500' },
-                { key: 'biasFraming', label: 'Vies / Framing', color: 'bg-amber-500' },
-                { key: 'manipulationRisk', label: 'Risco de manipulacao', color: 'bg-orange-500' },
+                { key: 'verifiableTruth', label: 'Verificável', color: 'bg-green-500' },
+                { key: 'biasFraming', label: 'Viés / Framing', color: 'bg-amber-500' },
+                { key: 'manipulationRisk', label: 'Risco de manipulação', color: 'bg-orange-500' },
               ] as const).map(({ key, label, color }) => {
                 const v = report.scores?.[key] || 0
                 return (
@@ -304,7 +304,7 @@ export default function Home() {
             {/* Actions */}
             <div className="flex gap-3 mt-6">
               <button onClick={copyReport} className="flex-1 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 py-2.5 rounded-xl text-sm font-medium hover:bg-slate-50 dark:hover:bg-slate-750 transition">
-                📋 Copiar relatorio
+                📋 Copiar relatório
               </button>
               <button onClick={downloadReport} className="flex-1 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 py-2.5 rounded-xl text-sm font-medium hover:bg-slate-50 dark:hover:bg-slate-750 transition">
                 ⬇️ Baixar .md
@@ -316,8 +316,8 @@ export default function Home() {
 
       {/* ═══════ FONTES ═══════ */}
       <section ref={sourcesRef} className="animate-on-scroll px-6 py-10 max-w-3xl mx-auto">
-        <h2 className="text-lg font-semibold text-center mb-2 dark:text-white">Fontes confiaveis</h2>
-        <p className="text-xs text-slate-400 text-center mb-6">Confirme sempre em agencias independentes de checagem.</p>
+        <h2 className="text-lg font-semibold text-center mb-2 dark:text-white">Fontes confiáveis</h2>
+        <p className="text-xs text-slate-400 text-center mb-6">Confirme sempre em agências independentes de checagem.</p>
         <div className="grid grid-cols-3 gap-3">
           {SOURCES.map(s => (
             <a
@@ -337,9 +337,9 @@ export default function Home() {
       {/* ═══════ WHATSAPP ═══════ */}
       <section ref={whatsRef} className="animate-on-scroll px-6 py-8 max-w-2xl mx-auto">
         <div className="bg-white dark:bg-slate-800 rounded-2xl shadow-md border border-slate-100 dark:border-slate-700 p-6 text-center">
-          <h3 className="text-base font-semibold mb-2 dark:text-white">Agora faca a sua parte</h3>
+          <h3 className="text-base font-semibold mb-2 dark:text-white">Agora faça a sua parte</h3>
           <p className="text-xs text-slate-500 dark:text-slate-400 mb-5">
-            Compartilhe o resultado com quem te enviou a mensagem. Desinformacao afeta pessoas reais.
+            Compartilhe o resultado com quem te enviou a mensagem. Desinformação afeta pessoas reais.
           </p>
           <button
             onClick={copyWhatsApp}
@@ -362,10 +362,10 @@ export default function Home() {
         </button>
         {showNeutrality && (
           <div className="mt-4 p-5 bg-white dark:bg-slate-800 rounded-2xl shadow-sm border border-slate-100 dark:border-slate-700 text-xs text-slate-600 dark:text-slate-300 animate-fade-in leading-relaxed">
-            <h4 className="font-semibold mb-2 text-slate-800 dark:text-white">Neutralidade por metodo (nao por opiniao)</h4>
-            <p className="mb-2">O Fake News Verificaton nao apoia candidatos, partidos ou ideologias. A analise e guiada por metodo: extraimos as afirmacoes, avaliamos a evidencia disponivel, verificamos consistencia logica, apontamos possiveis tecnicas de manipulacao e sugerimos caminhos para verificacao em multiplas fontes confiaveis.</p>
-            <p className="mb-2">Quando nao ha base suficiente para concluir, o resultado e &quot;Inconclusivo&quot;.</p>
-            <p>Analise assistida por IA (Gemini). Nao substitui agencias profissionais de checagem.</p>
+            <h4 className="font-semibold mb-2 text-slate-800 dark:text-white">Neutralidade por método (não por opinião)</h4>
+            <p className="mb-2">O Fake News Verificaton não apoia candidatos, partidos ou ideologias. A análise é guiada por método: extraímos as afirmações, avaliamos a evidência disponível, verificamos consistência lógica, apontamos possíveis técnicas de manipulação e sugerimos caminhos para verificação em múltiplas fontes confiáveis.</p>
+            <p className="mb-2">Quando não há base suficiente para concluir, o resultado é &quot;Inconclusivo&quot;.</p>
+            <p>Análise assistida por IA (Gemini). Não substitui agências profissionais de checagem.</p>
           </div>
         )}
       </section>
@@ -376,7 +376,7 @@ export default function Home() {
           <span className="text-3xl mb-2 block">☕</span>
           <h3 className="text-base font-semibold mb-1 dark:text-white">Ajude o desenvolvedor</h3>
           <p className="text-xs text-slate-500 dark:text-slate-400 mb-5">
-            Projeto independente e voluntario. Se ajudou, considere apoiar.
+            Projeto independente e voluntário. Se ajudou, considere apoiar.
           </p>
           <div className="bg-white dark:bg-slate-800 rounded-xl p-4 max-w-sm mx-auto">
             <p className="text-[10px] text-slate-400 mb-2 uppercase tracking-wider">Chave PIX</p>
@@ -394,7 +394,7 @@ export default function Home() {
               {pixCopied ? '✓ Copiado!' : '📋 Copiar chave PIX'}
             </button>
           </div>
-          <p className="text-[10px] text-slate-400 mt-3">A doacao e opcional e nao influencia analises.</p>
+          <p className="text-[10px] text-slate-400 mt-3">A doação é opcional e não influencia análises.</p>
         </div>
       </section>
 

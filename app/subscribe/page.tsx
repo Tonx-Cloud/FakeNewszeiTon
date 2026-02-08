@@ -37,7 +37,7 @@ export default function SubscribePage() {
         setStatus('success')
       }
     } catch {
-      setErrorMsg('Erro de conexao. Tente novamente.')
+      setErrorMsg('Erro de conexão. Tente novamente.')
       setStatus('error')
     }
   }
@@ -51,7 +51,7 @@ export default function SubscribePage() {
         <div className="text-center mb-8">
           <h1 className="text-2xl font-bold dark:text-white mb-2">Inscrever-se</h1>
           <p className="text-sm text-slate-500 dark:text-slate-400">
-            Receba alertas de desinformacao e resumos semanais. Todos os campos sao opcionais — preencha pelo menos um contato.
+            Receba alertas de desinformação e resumos semanais. Todos os campos são opcionais — preencha pelo menos um contato.
           </p>
         </div>
 
@@ -60,10 +60,10 @@ export default function SubscribePage() {
             <span className="text-4xl block mb-3">✅</span>
             <h2 className="text-lg font-semibold text-green-800 dark:text-green-200 mb-2">Cadastro realizado!</h2>
             <p className="text-sm text-green-700 dark:text-green-300 mb-4">
-              Voce sera notificado quando houver atualizacoes importantes.
+              Você será notificado quando houver atualizações importantes.
             </p>
             <a href="/" className="inline-block px-6 py-2.5 bg-brand-600 hover:bg-brand-700 text-white rounded-xl text-sm font-medium transition">
-              Voltar para analise
+              Voltar para análise
             </a>
           </div>
         ) : (
@@ -137,7 +137,7 @@ export default function SubscribePage() {
             </button>
 
             <p className="text-[10px] text-slate-400 text-center">
-              Seus dados sao usados apenas para envio de alertas. Sem spam.
+              Seus dados são usados apenas para envio de alertas. Sem spam.
             </p>
           </form>
         )}

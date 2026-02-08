@@ -6,10 +6,10 @@ import { DarkModeProvider } from '@/components/DarkModeProvider'
 export const metadata: Metadata = {
   metadataBase: new URL('https://fakenewsverificaton.com.br'),
   title: 'Fake News Verificaton — Verifique antes de compartilhar',
-  description: 'Analise mensagens do WhatsApp e redes sociais para identificar sinais de desinformacao, vies ou manipulacao. Ferramenta gratuita e independente.',
+  description: 'Analise mensagens do WhatsApp e redes sociais para identificar sinais de desinformação, viés ou manipulação. Ferramenta gratuita e independente.',
   openGraph: {
     title: 'Fake News Verificaton — Verifique antes de compartilhar',
-    description: 'Analise conteudos suspeitos com IA antes de compartilhar. Neutralidade por metodo.',
+    description: 'Analise conteúdos suspeitos com IA antes de compartilhar. Neutralidade por método.',
     type: 'website',
     locale: 'pt_BR',
     siteName: 'Fake News Verificaton',
@@ -18,7 +18,7 @@ export const metadata: Metadata = {
   twitter: {
     card: 'summary',
     title: 'Fake News Verificaton',
-    description: 'Analise de desinformacao com IA. Verifique antes de compartilhar.',
+    description: 'Análise de desinformação com IA. Verifique antes de compartilhar.',
   },
   robots: { index: true, follow: true },
 }

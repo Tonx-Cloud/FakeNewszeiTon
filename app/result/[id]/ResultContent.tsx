@@ -9,9 +9,9 @@ interface ResultContentProps {
 
 const scoreKeys = [
   { key: 'fakeProbability', label: 'Risco de fake', color: 'bg-red-500' },
-  { key: 'verifiableTruth', label: 'Verificavel', color: 'bg-green-500' },
-  { key: 'biasFraming', label: 'Vies / Framing', color: 'bg-amber-500' },
-  { key: 'manipulationRisk', label: 'Risco de manipulacao', color: 'bg-orange-500' },
+  { key: 'verifiableTruth', label: 'Verificável', color: 'bg-green-500' },
+  { key: 'biasFraming', label: 'Viés / Framing', color: 'bg-amber-500' },
+  { key: 'manipulationRisk', label: 'Risco de manipulação', color: 'bg-orange-500' },
 ]
 
 export default function ResultContent({ analysis }: ResultContentProps) {
@@ -49,7 +49,7 @@ export default function ResultContent({ analysis }: ResultContentProps) {
       {/* Claims */}
       {analysis.claims && analysis.claims.length > 0 && (
         <div className="mb-6">
-          <h2 className="text-sm font-semibold mb-3 dark:text-white">Afirmacoes analisadas</h2>
+          <h2 className="text-sm font-semibold mb-3 dark:text-white">Afirmações analisadas</h2>
           <div className="space-y-2">
             {analysis.claims.map((c: any, i: number) => (
               <div key={i} className="bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl p-4 text-xs">
@@ -64,7 +64,7 @@ export default function ResultContent({ analysis }: ResultContentProps) {
       {/* Full report markdown */}
       {analysis.report_markdown && (
         <div className="bg-white dark:bg-slate-800 rounded-2xl shadow-lg border border-slate-200/60 dark:border-slate-700/60 p-6">
-          <h2 className="text-sm font-semibold mb-4 dark:text-white">Relatorio completo</h2>
+          <h2 className="text-sm font-semibold mb-4 dark:text-white">Relatório completo</h2>
           <div className="prose prose-sm dark:prose-invert max-w-none prose-headings:text-slate-800 dark:prose-headings:text-white prose-a:text-brand-600 dark:prose-a:text-brand-400 prose-table:text-sm prose-th:bg-slate-100 dark:prose-th:bg-slate-800 prose-th:px-3 prose-th:py-1.5 prose-td:px-3 prose-td:py-1.5">
             <ReactMarkdown remarkPlugins={[remarkGfm]} rehypePlugins={[rehypeRaw]}>
               {analysis.report_markdown}

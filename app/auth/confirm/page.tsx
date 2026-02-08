@@ -21,7 +21,7 @@ export default function AuthConfirmPage() {
 
         if (error) {
           console.error('Auth confirm error:', error)
-          setErrorMsg('Erro ao recuperar sessao. Tente fazer login novamente.')
+          setErrorMsg('Erro ao recuperar sessão. Tente fazer login novamente.')
           setStatus('error')
           return
         }
@@ -55,7 +55,7 @@ export default function AuthConfirmPage() {
                 <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v4a4 4 0 00-4 4H4z"/>
               </svg>
               <h2 className="text-lg font-semibold text-slate-700 dark:text-white mb-2">Autenticando...</h2>
-              <p className="text-sm text-slate-500 dark:text-slate-400">Recuperando sua sessao.</p>
+              <p className="text-sm text-slate-500 dark:text-slate-400">Recuperando sua sessão.</p>
             </div>
           )}
 
@@ -63,14 +63,14 @@ export default function AuthConfirmPage() {
             <div className="animate-fade-in">
               <span className="text-5xl block mb-4">✅</span>
               <h2 className="text-lg font-semibold text-green-700 dark:text-green-300 mb-2">Login confirmado!</h2>
-              <p className="text-sm text-slate-500 dark:text-slate-400">Redirecionando para a pagina principal...</p>
+              <p className="text-sm text-slate-500 dark:text-slate-400">Redirecionando para a página principal…</p>
             </div>
           )}
 
           {status === 'error' && (
             <div className="animate-fade-in">
               <span className="text-5xl block mb-4">❌</span>
-              <h2 className="text-lg font-semibold text-red-700 dark:text-red-300 mb-2">Erro na autenticacao</h2>
+              <h2 className="text-lg font-semibold text-red-700 dark:text-red-300 mb-2">Erro na autenticação</h2>
               <p className="text-sm text-slate-500 dark:text-slate-400 mb-4">{errorMsg}</p>
               <a href="/auth" className="inline-block px-6 py-2.5 bg-brand-600 hover:bg-brand-700 text-white rounded-xl text-sm font-medium transition">
                 Tentar novamente

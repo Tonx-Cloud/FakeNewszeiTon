@@ -1,6 +1,6 @@
 # Fake News Verificaton
 
-Ferramenta de analise de desinformacao assistida por IA. Recebe conteudo (texto, link, imagem ou audio) e gera um relatorio estruturado com scores, veredito, avaliacao de afirmacoes, fontes de checagem e recomendacoes.
+Ferramenta de análise de desinformação assistida por IA. Recebe conteúdo (texto, link, imagem ou áudio) e gera um relatório estruturado com scores, veredito, avaliação de afirmações, fontes de checagem e recomendações.
 
 **Live:** https://fakenewsverificaton.com.br  
 **Repo:** https://github.com/Tonx-Cloud/FakeNewszeiTon.git
@@ -9,39 +9,39 @@ Ferramenta de analise de desinformacao assistida por IA. Recebe conteudo (texto,
 
 - **Next.js 14** (App Router, TypeScript)
 - **Tailwind CSS 3** (dark mode, glassmorphism, animations)
-- **Gemini 2.0 Flash** (`@google/generative-ai`) — analise multimodal (texto, imagem, audio)
+- **Gemini 2.0 Flash** (`@google/generative-ai`) — análise multimodal (texto, imagem, áudio)
 - **Supabase** — Auth (magic link), PostgreSQL (profiles, analyses, trending_items, subscribers)
 - **Resend** — email digests
-- **react-markdown** + remark-gfm + rehype-raw — renderizacao de relatorios em Markdown
-- **Vercel** — deploy automatico + cron
+- **react-markdown** + remark-gfm + rehype-raw — renderização de relatórios em Markdown
+- **Vercel** — deploy automático + cron
 
 ## Setup local
 
 ```bash
-# 1. Instalar dependencias
+# 1. Instalar dependências
 npm install
 
 # 2. Criar projeto Supabase e rodar migration
-# Execute o conteudo de supabase/sql/001_init.sql no SQL Editor do Supabase
+# Execute o conteúdo de supabase/sql/001_init.sql no SQL Editor do Supabase
 
-# 3. Copiar .env.example para .env.local e preencher as variaveis
+# 3. Copiar .env.example para .env.local e preencher as variáveis
 
 # 4. Rodar em dev
 npm run dev
 ```
 
-## Variaveis de ambiente
+## Variáveis de ambiente
 
-| Variavel | Descricao |
+| Variável | Descrição |
 |----------|-----------|
 | `GEMINI_API_KEY` | Chave da API Google Gemini |
 | `GEMINI_MODEL` | Modelo (default: `gemini-2.0-flash`) |
 | `NEXT_PUBLIC_SUPABASE_URL` | URL do projeto Supabase |
-| `NEXT_PUBLIC_SUPABASE_ANON_KEY` | Chave publica (anon) do Supabase |
+| `NEXT_PUBLIC_SUPABASE_ANON_KEY` | Chave pública (anon) do Supabase |
 | `SUPABASE_SERVICE_ROLE_KEY` | Chave service_role (server-side) |
 | `RESEND_API_KEY` | Chave da API Resend |
 | `FROM_EMAIL` | Email remetente dos digests |
-| `PUBLIC_APP_URL` | URL publica do app (`https://fakenewsverificaton.com.br`) |
+| `PUBLIC_APP_URL` | URL pública do app (`https://fakenewsverificaton.com.br`) |
 | `CRON_SECRET` | Segredo para proteger endpoint de cron |
 | `UNSUB_SECRET` | Segredo para tokens de unsubscribe |
 
@@ -49,43 +49,43 @@ npm run dev
 
 Tabelas em `supabase/sql/001_init.sql`:
 
-- **profiles** — perfil de usuario (vinculado a auth.users)
-- **analyses** — analises salvas com scores, veredito, markdown
-- **trending_items** — agregacao de fakes em alta (cron)
-- **subscribers** — inscricoes para alertas (nome, email, whatsapp, opcionais)
+- **profiles** — perfil de usuário (vinculado a auth.users)
+- **analyses** — análises salvas com scores, veredito, markdown
+- **trending_items** — agregação de fakes em alta (cron)
+- **subscribers** — inscrições para alertas (nome, email, whatsapp, opcionais)
 
 Todas com RLS ativado. Service role gerencia via API routes.
 
-## Paginas
+## Páginas
 
-| Rota | Descricao |
+| Rota | Descrição |
 |------|-----------|
-| `/` | Pagina principal — hero, analise, resultado com Markdown, fontes, WhatsApp, PIX |
+| `/` | Página principal — hero, análise, resultado com Markdown, fontes, WhatsApp, PIX |
 | `/auth` | Login via magic link (Supabase Auth) |
-| `/auth/callback` | Callback — route.ts troca code por sessao e redireciona para HOME (/) |
-| `/subscribe` | Inscricao para alertas (nome, email, WhatsApp — campos opcionais) |
-| `/alerts` | Pagina de trending fakes (SSR, force-dynamic) |
+| `/auth/callback` | Callback — route.ts troca code por sessão e redireciona para HOME (/) |
+| `/subscribe` | Inscrição para alertas (nome, email, WhatsApp — campos opcionais) |
+| `/alerts` | Página de trending fakes (SSR, force-dynamic) |
 
 ## API Routes
 
-| Endpoint | Metodo | Descricao |
+| Endpoint | Método | Descrição |
 |----------|--------|-----------|
-| `/api/analyze` | POST | Analise de conteudo (rate limit 10/min/IP, max 4.5 MB) |
+| `/api/analyze` | POST | Análise de conteúdo (rate limit 10/min/IP, max 4.5 MB) |
 | `/api/subscribe` | POST | Cadastro de subscriber (upsert por email/whatsapp) |
 | `/api/cron/digest` | GET | Envia digest por email (protegido por CRON_SECRET) |
 
-## Relatorio Markdown
+## Relatório Markdown
 
-O pipeline de analise (`lib/analyzePipeline.ts`) gera um relatorio Markdown estruturado server-side com:
+O pipeline de análise (`lib/analyzePipeline.ts`) gera um relatório Markdown estruturado server-side com:
 
 1. **Resultado** — veredito com emoji (❌/✅/⚠️) + resumo
-2. **Scores** — tabela markdown com metricas e indicadores visuais
-3. **Avaliacao das afirmacoes** — cada claim com assessment e confianca
-4. **Fontes externas** — links para agencias de checagem relevantes
-5. **Recomendacoes** — passos para o usuario verificar por conta propria
-6. **Pesquise voce mesmo** — queries sugeridas
+2. **Scores** — tabela markdown com métricas e indicadores visuais
+3. **Avaliação das afirmações** — cada claim com assessment e confiança
+4. **Fontes externas** — links para agências de checagem relevantes
+5. **Recomendações** — passos para o usuário verificar por conta própria
+6. **Pesquise você mesmo** — queries sugeridas
 
-O Markdown e renderizado no frontend com `react-markdown` + `remark-gfm` + `rehype-raw` com classes `prose` do Tailwind.
+O Markdown é renderizado no frontend com `react-markdown` + `remark-gfm` + `rehype-raw` com classes `prose` do Tailwind.
 
 ## Cron
 
@@ -97,7 +97,7 @@ Configurado em `vercel.json` — executa diariamente as 09:00 UTC:
 
 ## Neutralidade
 
-O Fake News Verificaton nao apoia candidatos, partidos ou ideologias. A analise avalia afirmacoes explicitas, nunca pessoas ou grupos. Quando nao ha base para conclusao, o resultado e "Inconclusivo".
+O Fake News Verificaton não apoia candidatos, partidos ou ideologias. A análise avalia afirmações explícitas, nunca pessoas ou grupos. Quando não há base para conclusão, o resultado é "Inconclusivo".
 
-*Analise assistida por IA (Gemini). Nao substitui checagem profissional.*
+*Análise assistida por IA (Gemini). Não substitui checagem profissional.*
 
