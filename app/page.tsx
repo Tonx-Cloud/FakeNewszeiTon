@@ -67,6 +67,7 @@ export default function Home() {
   const [whatsCopied, setWhatsCopied] = useState(false)
   const [turnstileToken, setTurnstileToken] = useState('')
   const [captchaKey, setCaptchaKey] = useState(0)
+  const [homeConsentChecked, setHomeConsentChecked] = useState(false)
 
   const onCaptchaVerify = useCallback((token: string) => setTurnstileToken(token), [])
   const onCaptchaExpire = useCallback(() => setTurnstileToken(''), [])
@@ -84,6 +85,10 @@ export default function Home() {
   /* ─── handlers ─── */
   const handleAnalyze = async () => {
     if (!content.trim()) return
+    if (!homeConsentChecked) {
+      setApiError({ ok: false, error: 'CONSENT_MISSING', message: 'Para continuar, aceite os Termos e a Política de Privacidade.' })
+      setLoading('error'); return
+    }
     if (content.length > MAX_UPLOAD_SIZE) {
       setApiError({ ok: false, error: 'TOO_LARGE', message: 'Arquivo muito grande (máx. ~4.5 MB). Tente um menor.' })
       setLoading('error'); return
@@ -230,10 +235,27 @@ export default function Home() {
           className="mt-4"
         />
 
+        {/* LGPD Consent */}
+        <div className="mt-4 flex items-start gap-3">
+          <input
+            type="checkbox"
+            id="home-consent"
+            checked={homeConsentChecked}
+            onChange={(e) => setHomeConsentChecked(e.target.checked)}
+            className="mt-0.5 w-4 h-4 rounded border-slate-300 dark:border-slate-600 text-brand-600 focus:ring-brand-500/50"
+          />
+          <label htmlFor="home-consent" className="text-xs text-slate-600 dark:text-slate-300 leading-relaxed">
+            Li e concordo com os{' '}
+            <a href="/terms" target="_blank" className="text-brand-600 dark:text-brand-400 underline hover:no-underline">Termos de Uso</a>
+            {' '}e a{' '}
+            <a href="/privacy" target="_blank" className="text-brand-600 dark:text-brand-400 underline hover:no-underline">Política de Privacidade</a>.
+          </label>
+        </div>
+
         {/* CTA */}
         <button
           onClick={handleAnalyze}
-          disabled={loading === 'loading' || !content.trim()}
+          disabled={loading === 'loading' || !content.trim() || !homeConsentChecked}
           className="w-full mt-5 bg-gradient-to-r from-brand-600 to-purple-600 hover:from-brand-700 hover:to-purple-700 text-white py-3.5 rounded-2xl font-semibold text-base shadow-lg shadow-brand-500/25 disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-200 flex items-center justify-center gap-2"
         >
           {loading === 'loading' ? (
@@ -255,6 +277,7 @@ export default function Home() {
                   {apiError.error === 'SERVER_MISCONFIG' ? 'Chave da IA não configurada. Verifique GEMINI_API_KEY no Vercel.' :
                    apiError.error === 'RATE_LIMITED' ? 'Muitas requisições. Aguarde um minuto.' :
                    apiError.error === 'TOO_LARGE' ? apiError.message :
+                   apiError.error === 'CONSENT_MISSING' ? 'Para continuar, aceite os Termos e a Política de Privacidade.' :
                    'Servidor não conseguiu analisar. Tente novamente.'}
                 </p>
               </div>
