@@ -1,32 +1,64 @@
 'use client'
 import { useState } from 'react'
-import { analyzePipeline } from '@/lib/analyzePipeline'
 
 type TabType = 'text' | 'link' | 'image' | 'audio'
 type LoadingState = 'idle' | 'loading' | 'error' | 'success'
+
+interface ApiError {
+  ok: false
+  error: string
+  message: string
+}
+
+interface ReportResult {
+  ok: true
+  meta: any
+  scores: any
+  summary: any
+  claims: any
+  similar: any
+  reportMarkdown: string
+}
 
 export default function Home() {
   const [activeTab, setActiveTab] = useState<TabType>('text')
   const [content, setContent] = useState('')
   const [loading, setLoading] = useState<LoadingState>('idle')
-  const [report, setReport] = useState<any>(null)
+  const [report, setReport] = useState<ReportResult | null>(null)
+  const [apiError, setApiError] = useState<ApiError | null>(null)
   const [showNeutrality, setShowNeutrality] = useState(false)
 
   const handleAnalyze = async () => {
     if (!content.trim()) return
     setLoading('loading')
+    setApiError(null)
     try {
-      const result = await analyzePipeline(activeTab, content)
-      setReport(result)
-      setLoading('success')
+      const response = await fetch('/api/analyze', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ inputType: activeTab, content })
+      })
+      const data = await response.json()
+      if (!response.ok || !data.ok) {
+        setApiError(data as ApiError)
+        setLoading('error')
+      } else {
+        setReport(data as ReportResult)
+        setLoading('success')
+      }
     } catch (err) {
       console.error(err)
+      setApiError({
+        ok: false,
+        error: 'NETWORK_ERROR',
+        message: 'Erro de conexao. Tente novamente.'
+      })
       setLoading('error')
     }
   }
 
   const copyWhatsApp = () => {
-    const text = `Oi! Recebi aquela mensagem e resolvi analisar com o FakeNewsZeiTon.\nO resultado foi: ${report?.summary?.verdict || 'Inconclusivo'} (risco estimado de fake: ${report?.scores?.fakeProbability || 0}%).\nTalvez seja melhor confirmar em fontes confiáveis antes de compartilhar.\nVamos evitar desinformacao`
+    const text = `Oi! Recebi aquela mensagem e resolvi analisar com o FakeNewsZeiTon.\nO resultado foi: ${report?.summary?.verdict || 'Inconclusivo'} (risco estimado de fake: ${report?.scores?.fakeProbability || 0}%).\nTalvez seja melhor confirmar em fontes confiaveis antes de compartilhar.\nVamos evitar desinformacao`
     navigator.clipboard.writeText(text)
     alert('Copiado! Cole no WhatsApp.')
   }
@@ -162,11 +194,30 @@ export default function Home() {
           {loading === 'loading' ? 'Analisando...' : 'Analisar'}
         </button>
 
-        {/* Error */}
-        {loading === 'error' && (
-          <p className="text-xs text-red-600 mt-3">
-            Erro na analise. Tente novamente.
-          </p>
+        {/* Error Amigavel */}
+        {loading === 'error' && apiError && (
+          <div className="mt-4 p-4 bg-amber-50 border border-amber-200 rounded-lg">
+            <div className="flex items-start gap-3">
+              <svg className="w-5 h-5 text-amber-500 mt-0.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
+              </svg>
+              <div>
+                <h4 className="text-sm font-medium text-amber-800">Ops! Algo deu errado</h4>
+                {apiError.error === 'SERVER_MISCONFIG' ? (
+                  <div className="mt-2">
+                    <p className="text-xs text-amber-700">
+                      Configuracao incompleta: a chave da OpenAI nao esta definida no servidor (Vercel).
+                    </p>
+                    <p className="text-xs text-amber-600 mt-1">
+                      Para resolver, adicione a variavel <code>OPENAI_API_KEY</code> nas configuracoes de ambiente do seu projeto na Vercel.
+                    </p>
+                  </div>
+                ) : (
+                  <p className="text-xs text-amber-700 mt-1">{apiError.message}</p>
+                )}
+              </div>
+            </div>
+          </div>
         )}
       </section>
 
@@ -302,7 +353,6 @@ export default function Home() {
           </p>
           <div className="flex items-center gap-4 p-4 bg-slate-50 rounded">
             <div className="w-24 h-24 bg-white border flex items-center justify-center">
-              {/* QR Code Placeholder - would need a library like qrcode.react */}
               <svg width="80" height="80" viewBox="0 0 100 100" className="text-slate-800">
                 <rect width="100" height="100" fill="white"/>
                 <path d="M10 10h20v20h-20z M40 10h10v10h-10z M70 10h20v20h-20z M10 40h20v10h-20z M40 40h10v10h-10z M60 40h10v10h-10z M80 40h10v10h-10z M10 60h10v20h-10z M30 60h10v10h-10z M50 60h20v20h-20z M80 60h10v20h-10z M10 80h20v10h-20z M40 80h10v10h-10z M70 80h20v10h-20z" fill="currentColor"/>

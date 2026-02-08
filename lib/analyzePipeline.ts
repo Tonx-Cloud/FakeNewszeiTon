@@ -1,4 +1,5 @@
-import { openai } from './openai'
+import 'server-only'
+import { getOpenAI } from './openaiServer'
 import crypto from 'crypto'
 
 export async function analyzePipeline(inputType: string, content: string) {
@@ -22,6 +23,7 @@ Return ONLY JSON with fields: meta, scores, summary, claims, similar, reportMark
 Content to analyze:
 ${normalized}`
 
+  const openai = getOpenAI()
   const resp = await openai.responses.create({
     model: process.env.OPENAI_MODEL || 'gpt-4o-mini',
     input: prompt,
@@ -34,12 +36,12 @@ ${normalized}`
   try { parsed = JSON.parse(txt) } catch (e) {
     // fallback: build a minimal response
     parsed = {
-      meta: { id: crypto.randomUUID(), createdAt: new Date().toISOString(), inputType, language: 'pt-BR', mode: 'mvp_no_external_sources', warnings: ['Análise baseada apenas no conteúdo fornecido. Não substitui verificação profissional.'] },
+      meta: { id: crypto.randomUUID(), createdAt: new Date().toISOString(), inputType, language: 'pt-BR', mode: 'mvp_no_external_sources', warnings: ['Analise baseada apenas no conteudo fornecido. Nao substitui verificacao profissional.'] },
       scores: { fakeProbability: 50, verifiableTruth: 20, biasFraming: 40, manipulationRisk: 30 },
-      summary: { headline: 'Resultado Inconclusivo', oneParagraph: 'Não há base suficiente para uma conclusão definitiva. Recomendamos verificar em fontes confiáveis.', verdict: 'Inconclusivo' },
+      summary: { headline: 'Resultado Inconclusivo', oneParagraph: 'Nao ha base suficiente para uma conclusao definitiva. Recomendamos verificar em fontes confiaveis.', verdict: 'Inconclusivo' },
       claims: [],
       similar: { searchQueries: [], externalChecks: [] },
-      reportMarkdown: `# Relatório de Análise\n\n${normalized}\n\n---\n\n**Nota:** Este é um resultado inicial. Para conclusões definitivas, consulte agências de checagem profissionais.`
+      reportMarkdown: `# Relatorio de Analise\n\n${normalized}\n\n---\n\n**Nota:** Este e um resultado inicial. Para conclusoes definitivas, consulte agencias de checagem profissionais.`
     }
   }
 
