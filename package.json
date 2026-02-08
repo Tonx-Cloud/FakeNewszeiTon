@@ -15,6 +15,7 @@
     "@supabase/supabase-js": "^2.0.0",
     "@upstash/ratelimit": "^2.0.8",
     "@upstash/redis": "^1.36.2",
+    "@vercel/og": "^0.8.6",
     "clsx": "^1.2.1",
     "isomorphic-dompurify": "^3.0.0-rc.2",
     "linkedom": "^0.18.12",

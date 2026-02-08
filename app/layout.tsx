@@ -14,11 +14,21 @@ export const metadata: Metadata = {
     locale: 'pt_BR',
     siteName: 'Fake News VerificaTon',
     url: 'https://fakenewsverificaton.com.br',
+    images: [
+      {
+        url: '/api/og',
+        width: 1200,
+        height: 630,
+        alt: 'Fake News VerificaTon — Verifique antes de compartilhar',
+        type: 'image/png',
+      },
+    ],
   },
   twitter: {
-    card: 'summary',
-    title: 'Fake News VerificaTon',
-    description: 'Análise de desinformação com IA. Verifique antes de compartilhar.',
+    card: 'summary_large_image',
+    title: 'Fake News VerificaTon — Verifique antes de compartilhar',
+    description: 'Análise de desinformação com IA. Gratuito e apartidário.',
+    images: ['/api/og'],
   },
   robots: { index: true, follow: true },
 }
