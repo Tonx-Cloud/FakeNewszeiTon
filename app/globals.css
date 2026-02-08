@@ -26,9 +26,9 @@ body {
   transform: translateY(0);
 }
 
-/* Hero gradient */
+/* Hero gradient — minimalist dark */
 .hero-gradient {
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 50%, #f093fb 100%);
+  background: #0f1419;
 }
 
 /* Shimmer badge */

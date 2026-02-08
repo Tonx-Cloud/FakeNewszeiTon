@@ -129,36 +129,34 @@ export default function Home() {
       <section className="hero-gradient relative overflow-hidden">
         {/* Nav */}
         <nav className="relative z-10 flex items-center justify-between px-6 py-4 max-w-4xl mx-auto">
-          <span className="text-white/90 text-sm font-medium tracking-wide">FakeNewsZeiTon</span>
+          <a href="/" className="text-white/90 text-sm font-medium tracking-wide">
+            Fake<span className="text-[#1d9bf0]">News</span>ZeiTon
+          </a>
           <div className="flex items-center gap-4">
-            <a href="/alerts" className="text-white/70 text-xs hover:text-white transition">Alertas</a>
-            <a href="/subscribe" className="text-white/70 text-xs hover:text-white transition">Inscrever-se</a>
-            <a href="/auth" className="text-white/70 text-xs hover:text-white transition">Entrar</a>
-            <button onClick={toggle} className="text-white/60 hover:text-white transition text-lg" title="Alternar tema">
+            <a href="/alerts" className="text-white/50 text-xs hover:text-white transition">Alertas</a>
+            <a href="/subscribe" className="text-white/50 text-xs hover:text-white transition">Inscrever-se</a>
+            <a href="/auth" className="text-white/50 text-xs hover:text-white transition">Entrar</a>
+            <button onClick={toggle} className="text-white/40 hover:text-white transition text-lg" title="Alternar tema">
               {dark ? '☀️' : '🌙'}
             </button>
           </div>
         </nav>
 
-        <div ref={heroRef} className="animate-on-scroll relative z-10 text-center px-6 pt-8 pb-16 max-w-2xl mx-auto">
-          <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-white/15 backdrop-blur-sm border border-white/20 text-white text-xs mb-6 shimmer-badge animate-shimmer">
-            <span className="inline-block w-2 h-2 bg-green-400 rounded-full animate-pulse-slow" />
-            Powered by AI — Gemini
-          </div>
-          <h1 className="text-3xl sm:text-4xl font-bold text-white leading-tight mb-4">
-            Verifique as informacoes<br/>antes de compartilhar.
+        <div ref={heroRef} className="animate-on-scroll relative z-10 text-center px-6 pt-16 pb-20 max-w-2xl mx-auto">
+          <h1 className="text-4xl sm:text-5xl md:text-6xl font-bold text-white/95 leading-tight mb-5 tracking-tight">
+            Fake<span className="text-[#1d9bf0]">News</span>ZeiTon
           </h1>
-          <p className="text-white/80 text-base sm:text-lg leading-relaxed mb-2">
-            Descubra o que e fato ou fake!
+          <p className="text-white/50 text-sm sm:text-base leading-relaxed mb-3 max-w-md mx-auto">
+            Verifique as informacoes antes de compartilhar.
           </p>
-          <p className="text-white/50 text-xs">
+          <p className="text-white/30 text-xs">
             Analise assistida por IA. Nao substitui checagem profissional.
           </p>
+          <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-white/5 border border-white/10 text-white/40 text-xs mt-6">
+            <span className="inline-block w-1.5 h-1.5 bg-[#1d9bf0] rounded-full animate-pulse-slow" />
+            Powered by Gemini AI
+          </div>
         </div>
-
-        {/* Decorative circles */}
-        <div className="absolute -top-20 -right-20 w-64 h-64 bg-white/5 rounded-full" />
-        <div className="absolute -bottom-16 -left-16 w-48 h-48 bg-white/5 rounded-full" />
       </section>
 
       {/* ═══════ COMO FUNCIONA ═══════ */}
