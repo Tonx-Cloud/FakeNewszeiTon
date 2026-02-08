@@ -1,5 +1,6 @@
 #!/usr/bin/env pwsh
 # update-vercel-env.ps1 - PowerShell version for Windows
+# Updated to use Gemini instead of OpenAI
 
 if ([string]::IsNullOrEmpty($env:VERCEL_TOKEN)) {
     Write-Error "ERROR: set VERCEL_TOKEN in your environment"
@@ -9,13 +10,13 @@ if ([string]::IsNullOrEmpty($env:VERCEL_TOKEN)) {
 $PROJECT_NAME = "FakeNewsZeiTon"
 $PROJECT_ID = $env:PROJECT_ID
 
-if ([string]::IsNullOrEmpty($env:NEW_OPENAI_KEY)) { throw "set NEW_OPENAI_KEY" }
+if ([string]::IsNullOrEmpty($env:NEW_GEMINI_KEY)) { throw "set NEW_GEMINI_KEY" }
 if ([string]::IsNullOrEmpty($env:NEW_RESEND_KEY)) { throw "set NEW_RESEND_KEY" }
 if ([string]::IsNullOrEmpty($env:NEW_SUPABASE_SERVICE_ROLE_KEY)) { throw "set NEW_SUPABASE_SERVICE_ROLE_KEY" }
 if ([string]::IsNullOrEmpty($env:NEW_PUBLIC_APP_URL)) { throw "set NEW_PUBLIC_APP_URL" }
 if ([string]::IsNullOrEmpty($env:NEW_CRON_SECRET)) { throw "set NEW_CRON_SECRET" }
 if ([string]::IsNullOrEmpty($env:NEW_UNSUB_SECRET)) { throw "set NEW_UNSUB_SECRET" }
-$env:NEW_OPENAI_MODEL = if ($env:NEW_OPENAI_MODEL) { $env:NEW_OPENAI_MODEL } else { "gpt-4o-mini" }
+$env:NEW_GEMINI_MODEL = if ($env:NEW_GEMINI_MODEL) { $env:NEW_GEMINI_MODEL } else { "gemini-2.0-flash" }
 $env:NEW_FROM_EMAIL = if ($env:NEW_FROM_EMAIL) { $env:NEW_FROM_EMAIL } else { "FakeNewsZeiTon <onboarding@resend.dev>" }
 
 function Get-ProjectId {
@@ -46,8 +47,11 @@ function Upsert-Env {
     Write-Host " -> $name done"
 }
 
-Upsert-Env "OPENAI_API_KEY" $env:NEW_OPENAI_KEY
-Upsert-Env "OPENAI_MODEL" $env:NEW_OPENAI_MODEL
+# Gemini API (replaced OpenAI)
+Upsert-Env "GEMINI_API_KEY" $env:NEW_GEMINI_KEY
+Upsert-Env "GEMINI_MODEL" $env:NEW_GEMINI_MODEL
+
+# Other variables
 Upsert-Env "RESEND_API_KEY" $env:NEW_RESEND_KEY
 Upsert-Env "SUPABASE_SERVICE_ROLE_KEY" $env:NEW_SUPABASE_SERVICE_ROLE_KEY
 Upsert-Env "FROM_EMAIL" $env:NEW_FROM_EMAIL
@@ -55,4 +59,10 @@ Upsert-Env "PUBLIC_APP_URL" $env:NEW_PUBLIC_APP_URL
 Upsert-Env "CRON_SECRET" $env:NEW_CRON_SECRET
 Upsert-Env "UNSUB_SECRET" $env:NEW_UNSUB_SECRET
 
+Write-Host ""
 Write-Host "All environment variables upserted. Consider triggering a production deploy."
+Write-Host ""
+Write-Host "To use this script, run:"
+Write-Host '  $env:VERCEL_TOKEN="your-token"'
+Write-Host '  $env:NEW_GEMINI_KEY="your-gemini-key"'
+Write-Host '  .\scripts\update-vercel-env.ps1'
