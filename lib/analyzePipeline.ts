@@ -1,7 +1,8 @@
 import 'server-only'
 import crypto from 'crypto'
+import { getGemini } from './gemini'
 
-export async function analyzePipeline(openaiClient: any, inputType: string, content: string) {
+export async function analyzePipeline(inputType: string, content: string) {
   const normalized = (content || '').slice(0, 20000)
   const fingerprint = crypto.createHash('sha256').update(normalized).digest('hex')
 
@@ -20,13 +21,13 @@ Return ONLY JSON with fields: meta, scores, summary, claims, similar, reportMark
 Content to analyze:
 ${normalized}`
 
-  const resp = await openaiClient.chat.completions.create({
-    model: process.env.OPENAI_MODEL || 'gpt-4o',
-    messages: [{ role: 'user', content: prompt }],
-    max_tokens: 800
-  })
+  const genai = getGemini()
+  const model = genai.getGenerativeModel({ model: process.env.GEMINI_MODEL || 'gemini-1.5-flash' })
 
-  const txt = String((resp as any).choices?.[0]?.message?.content || JSON.stringify(resp))
+  const result = await model.generateContent(prompt)
+  const response = await result.response
+  const txt = String(response.text())
+
   let parsed: any = null
   try { parsed = JSON.parse(txt) } catch (e) {
     parsed = {

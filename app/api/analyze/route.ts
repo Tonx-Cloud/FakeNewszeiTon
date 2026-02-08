@@ -1,6 +1,6 @@
 import { NextResponse } from 'next/server'
 import { z } from 'zod'
-import OpenAI from 'openai'
+import { isGeminiConfigured, getGemini } from '../../../lib/gemini'
 import { analyzePipeline } from '../../../lib/analyzePipeline'
 
 export const runtime = "nodejs"
@@ -12,21 +12,19 @@ const BodySchema = z.object({
 
 export async function POST(req: Request) {
   try {
-    const apiKey = process.env.OPENAI_API_KEY?.trim()
-    if (!apiKey) {
-      console.error("[api/analyze] OPENAI_API_KEY not configured")
+    if (!isGeminiConfigured()) {
+      console.error("[api/analyze] GEMINI_API_KEY not configured")
       return NextResponse.json({
         ok: false,
         error: "SERVER_MISCONFIG",
-        message: "OPENAI_API_KEY nao configurada no servidor (Vercel)."
+        message: "GEMINI_API_KEY nao configurada no servidor (Vercel)."
       }, { status: 503 })
     }
 
     const body = await req.json()
     const parsed = BodySchema.parse(body)
 
-    const client = new OpenAI({ apiKey })
-    const result = await analyzePipeline(client, parsed.inputType, parsed.content)
+    const result = await analyzePipeline(parsed.inputType, parsed.content)
 
     return NextResponse.json(result)
   } catch (err: any) {
