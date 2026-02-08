@@ -4,8 +4,8 @@ import Footer from '@/components/Footer'
 import type { Metadata } from 'next'
 
 export const metadata: Metadata = {
-  title: 'Sobre Nós — Fake News Verificaton',
-  description: 'Conheça a missão, metodologia e compromisso de neutralidade do Fake News Verificaton.',
+  title: 'Sobre Nós — Fake News VerificaTon',
+  description: 'Conheça a missão, metodologia e compromisso de neutralidade do Fake News VerificaTon.',
 }
 
 export default function SobrePage() {
@@ -17,7 +17,7 @@ export default function SobrePage() {
         {/* Header */}
         <div className="text-center mb-12">
           <h1 className="text-3xl sm:text-4xl font-bold dark:text-white mb-3">
-            Sobre o Fake <span className="text-[#1d9bf0]">News</span> Verificaton
+            Sobre o Fake <span className="text-[#1d9bf0]">News</span> VerificaTon
           </h1>
           <p className="text-sm text-slate-500 dark:text-slate-400 max-w-lg mx-auto">
             Uma ferramenta independente e gratuita para ajudar brasileiros a identificar desinformação antes de compartilhar.
@@ -30,7 +30,7 @@ export default function SobrePage() {
             <span className="text-2xl">🎯</span> Nossa Missão
           </h2>
           <p className="text-sm text-slate-600 dark:text-slate-300 leading-relaxed mb-3">
-            O Fake News Verificaton nasceu da necessidade de combater a disseminação de informações falsas no Brasil.
+            O Fake News VerificaTon nasceu da necessidade de combater a disseminação de informações falsas no Brasil.
             Em tempos de sobrecarga informacional, onde mensagens virais no WhatsApp e redes sociais podem causar danos reais
             a pessoas e instituições, oferecemos uma ferramenta acessível para que qualquer cidadão possa verificar a
             confiabilidade de um conteúdo antes de compartilhá-lo.
@@ -77,7 +77,7 @@ export default function SobrePage() {
             <span className="text-2xl">⚖️</span> Compromisso de Neutralidade
           </h2>
           <p className="text-sm text-slate-600 dark:text-slate-300 leading-relaxed mb-3">
-            O Fake News Verificaton <strong>não apoia candidatos, partidos ou ideologias</strong>. Nossa análise é
+            O Fake News VerificaTon <strong>não apoia candidatos, partidos ou ideologias</strong>. Nossa análise é
             guiada estritamente por método:
           </p>
           <ul className="space-y-2 text-sm text-slate-600 dark:text-slate-300">
@@ -164,7 +164,7 @@ export default function SobrePage() {
             <span className="text-2xl">💻</span> Sobre o Projeto
           </h2>
           <p className="text-sm text-slate-600 dark:text-slate-300 leading-relaxed mb-3">
-            O Fake News Verificaton é um projeto independente e voluntário, desenvolvido com tecnologias modernas:
+            O Fake News VerificaTon é um projeto independente e voluntário, desenvolvido com tecnologias modernas:
           </p>
           <div className="flex flex-wrap gap-2 mb-4">
             {['Next.js', 'TypeScript', 'Tailwind CSS', 'Supabase', 'Gemini AI', 'Vercel'].map(tech => (

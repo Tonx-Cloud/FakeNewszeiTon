@@ -25,7 +25,7 @@ export default function Nav({ variant = 'standard' }: NavProps) {
             : 'text-slate-700 dark:text-slate-200 hover:text-brand-600 dark:hover:text-brand-400 transition'
         }`}
       >
-        Fake <span className="text-[#1d9bf0]">News</span> Verificaton
+        Fake <span className="text-[#1d9bf0]">News</span> VerificaTon
       </a>
 
       <div className="flex items-center gap-2 sm:gap-4">

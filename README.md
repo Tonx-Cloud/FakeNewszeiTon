@@ -1,4 +1,4 @@
-# Fake News Verificaton
+# Fake News VerificaTon
 
 Ferramenta de análise de desinformação assistida por IA. Recebe conteúdo (texto, link, imagem ou áudio) e gera um relatório estruturado com scores, veredito, avaliação de afirmações, fontes de checagem e recomendações.
 
@@ -136,7 +136,7 @@ Configurado em `vercel.json` — executa diariamente as 09:00 UTC:
 
 ## Neutralidade
 
-O Fake News Verificaton não apoia candidatos, partidos ou ideologias. A análise avalia afirmações explícitas, nunca pessoas ou grupos. Quando não há base para conclusão, o resultado é "Inconclusivo". Veja a [Metodologia](/methodology) completa.
+O Fake News VerificaTon não apoia candidatos, partidos ou ideologias. A análise avalia afirmações explícitas, nunca pessoas ou grupos. Quando não há base para conclusão, o resultado é "Inconclusivo". Veja a [Metodologia](/methodology) completa.
 
 *Análise assistida por IA (Gemini). Não substitui checagem profissional.*
 

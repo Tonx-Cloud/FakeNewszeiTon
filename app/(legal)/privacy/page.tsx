@@ -3,8 +3,8 @@ import Nav from '@/components/Nav'
 import Footer from '@/components/Footer'
 
 export const metadata = {
-  title: 'Política de Privacidade — Fake News Verificaton',
-  description: 'Política de privacidade e proteção de dados do Fake News Verificaton conforme a LGPD.',
+  title: 'Política de Privacidade — Fake News VerificaTon',
+  description: 'Política de privacidade e proteção de dados do Fake News VerificaTon conforme a LGPD.',
 }
 
 export default function PrivacyPage() {
@@ -17,7 +17,7 @@ export default function PrivacyPage() {
         <p className="text-sm text-slate-400">Última atualização: fevereiro de 2026</p>
 
         <p>
-          O <strong>Fake News Verificaton</strong> (&quot;nós&quot;, &quot;nosso&quot;) respeita a sua privacidade e está comprometido com a proteção dos seus dados pessoais, em conformidade com a Lei Geral de Proteção de Dados (LGPD — Lei nº 13.709/2018).
+          O <strong>Fake News VerificaTon</strong> (&quot;nós&quot;, &quot;nosso&quot;) respeita a sua privacidade e está comprometido com a proteção dos seus dados pessoais, em conformidade com a Lei Geral de Proteção de Dados (LGPD — Lei nº 13.709/2018).
         </p>
 
         <h2>1. Dados que coletamos</h2>

@@ -3,8 +3,8 @@ import Nav from '@/components/Nav'
 import Footer from '@/components/Footer'
 
 export const metadata = {
-  title: 'Termos de Uso — Fake News Verificaton',
-  description: 'Termos de uso do serviço Fake News Verificaton.',
+  title: 'Termos de Uso — Fake News VerificaTon',
+  description: 'Termos de uso do serviço Fake News VerificaTon.',
 }
 
 export default function TermsPage() {
@@ -17,12 +17,12 @@ export default function TermsPage() {
         <p className="text-sm text-slate-400">Última atualização: fevereiro de 2026</p>
 
         <p>
-          Ao utilizar o site <strong>Fake News Verificaton</strong> (&quot;Serviço&quot;), você concorda com os termos descritos abaixo. Caso não concorde, não utilize o Serviço.
+          Ao utilizar o site <strong>Fake News VerificaTon</strong> (&quot;Serviço&quot;), você concorda com os termos descritos abaixo. Caso não concorde, não utilize o Serviço.
         </p>
 
         <h2>1. Descrição do Serviço</h2>
         <p>
-          O Fake News Verificaton é uma ferramenta gratuita e independente de análise de conteúdos para identificação de sinais de desinformação, viés e manipulação, utilizando inteligência artificial (Gemini AI) como assistência.
+          O Fake News VerificaTon é uma ferramenta gratuita e independente de análise de conteúdos para identificação de sinais de desinformação, viés e manipulação, utilizando inteligência artificial (Gemini AI) como assistência.
         </p>
 
         <h2>2. Neutralidade e imparcialidade</h2>
@@ -63,7 +63,7 @@ export default function TermsPage() {
 
         <h2>7. Propriedade intelectual</h2>
         <p>
-          O código-fonte do Fake News Verificaton está disponível em repositório público. A marca, design e conteúdo editorial são de propriedade do desenvolvedor.
+          O código-fonte do Fake News VerificaTon está disponível em repositório público. A marca, design e conteúdo editorial são de propriedade do desenvolvedor.
         </p>
         <p>
           Os relatórios de análise gerados são de livre uso do usuário para fins de informação e compartilhamento.

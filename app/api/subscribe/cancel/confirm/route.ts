@@ -51,7 +51,7 @@ function htmlResponse(title: string, message: string, success: boolean) {
     `<!DOCTYPE html>
 <html lang="pt-BR">
 <head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
-<title>${title} — Fake News Verificaton</title>
+<title>${title} — Fake News VerificaTon</title>
 <style>
   body{font-family:system-ui,'Segoe UI',sans-serif;background:#0f172a;color:#e2e8f0;display:flex;align-items:center;justify-content:center;min-height:100vh;margin:0;padding:24px}
   .card{background:#1e293b;border-radius:20px;padding:48px 32px;text-align:center;max-width:420px;box-shadow:0 20px 40px rgba(0,0,0,.3)}
@@ -65,7 +65,7 @@ function htmlResponse(title: string, message: string, success: boolean) {
   <div class="icon">${icon}</div>
   <h1>${title}</h1>
   <p>${message}</p>
-  <a href="${APP_URL}">Voltar ao Fake News Verificaton</a>
+  <a href="${APP_URL}">Voltar ao Fake News VerificaTon</a>
 </div></body></html>`,
     { headers: { 'Content-Type': 'text/html; charset=utf-8' } },
   )

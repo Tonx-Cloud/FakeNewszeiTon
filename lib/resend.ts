@@ -8,12 +8,12 @@ const BTN_STYLE = `display:inline-block;padding:14px 28px;background:#1d9bf0;col
 function emailShell(body: string) {
   return `<html><body style="${EMAIL_STYLE}">
     <div style="text-align:center;margin-bottom:24px">
-      <strong style="font-size:18px;color:#0f1419">🔍 Fake News Verificaton</strong>
+      <strong style="font-size:18px;color:#0f1419">🔍 Fake News VerificaTon</strong>
     </div>
     ${body}
     <hr style="border:none;border-top:1px solid #e2e8f0;margin:28px 0 16px"/>
     <p style="font-size:11px;color:#94a3b8;text-align:center">
-      Fake News Verificaton — Análise assistida por IA. Não substitui fact-checking profissional.<br/>
+      Fake News VerificaTon — Análise assistida por IA. Não substitui fact-checking profissional.<br/>
       <a href="${APP_URL}/privacy" style="color:#64748b">Política de Privacidade</a> · <a href="${APP_URL}/terms" style="color:#64748b">Termos de Uso</a>
     </p>
   </body></html>`
@@ -27,7 +27,7 @@ export function buildConfirmationEmail(to: string, token: string, name?: string 
   return {
     from: FROM,
     to,
-    subject: 'Confirme sua inscrição — Fake News Verificaton',
+    subject: 'Confirme sua inscrição — Fake News VerificaTon',
     html: emailShell(`
       <h2 style="text-align:center;margin:0 0 16px">${greeting}</h2>
       <p style="text-align:center;font-size:14px;line-height:1.6">
@@ -52,7 +52,7 @@ export function buildCancelConfirmationEmail(to: string, token: string) {
   return {
     from: FROM,
     to,
-    subject: 'Confirme o cancelamento — Fake News Verificaton',
+    subject: 'Confirme o cancelamento — Fake News VerificaTon',
     html: emailShell(`
       <h2 style="text-align:center;margin:0 0 16px">Cancelar inscrição</h2>
       <p style="text-align:center;font-size:14px;line-height:1.6">
@@ -73,8 +73,8 @@ export function buildCancelConfirmationEmail(to: string, token: string) {
 /* ── Digest email (trending fakes) ── */
 export function buildDigestEmailPayload(to: string, items: any[], frequency: string) {
   const subject = frequency === 'weekly'
-    ? 'Fake News Verificaton — Fakes em alta (semana)'
-    : 'Fake News Verificaton — Fakes em alta (últimas 24h)'
+    ? 'Fake News VerificaTon — Fakes em alta (semana)'
+    : 'Fake News VerificaTon — Fakes em alta (últimas 24h)'
 
   const rows = (items || [])
     .slice(0, frequency === 'weekly' ? 10 : 5)

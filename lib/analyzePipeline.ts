@@ -144,7 +144,7 @@ export async function analyzePipeline(inputType: string, content: string) {
           ok: true as const,
           meta: { id: crypto.randomUUID(), createdAt: new Date().toISOString(), inputType, language: 'pt-BR', mode: 'self_reference', warnings: [], fingerprint },
           scores: { fakeProbability: 0, verifiableTruth: 100, biasFraming: 0, manipulationRisk: 0 },
-          summary: { headline: 'Site oficial do Fake News Verificaton', oneParagraph: 'Este é o site oficial do Fake News Verificaton. O sistema não analisa o próprio domínio.', verdict: 'Provavel verdadeiro' as const },
+          summary: { headline: 'Site oficial do Fake News VerificaTon', oneParagraph: 'Este é o site oficial do Fake News VerificaTon. O sistema não analisa o próprio domínio.', verdict: 'Provavel verdadeiro' as const },
           claims: [],
           similar: { searchQueries: [], externalChecks: [] },
           recommendations: [],

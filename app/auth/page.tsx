@@ -76,7 +76,7 @@ export default function AuthPage() {
       <Nav />
 
       <div className="max-w-md mx-auto px-6 pt-12 pb-16">
-        <h1 className="text-xl font-semibold mb-2 dark:text-white">Entrar no Fake News Verificaton</h1>
+        <h1 className="text-xl font-semibold mb-2 dark:text-white">Entrar no Fake News VerificaTon</h1>
         <p className="text-sm text-slate-500 dark:text-slate-400 mb-6">
           Use seu email para receber um link mágico de acesso. Sem senha necessária.
         </p>

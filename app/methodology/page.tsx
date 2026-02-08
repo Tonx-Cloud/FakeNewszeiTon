@@ -3,8 +3,8 @@ import Nav from '@/components/Nav'
 import Footer from '@/components/Footer'
 
 export const metadata = {
-  title: 'Metodologia — Fake News Verificaton',
-  description: 'Como o Fake News Verificaton analisa conteúdos e identifica sinais de desinformação.',
+  title: 'Metodologia — Fake News VerificaTon',
+  description: 'Como o Fake News VerificaTon analisa conteúdos e identifica sinais de desinformação.',
 }
 
 const steps = [
@@ -84,7 +84,7 @@ export default function MethodologyPage() {
         <div className="text-center mb-10">
           <h1 className="text-3xl font-bold dark:text-white mb-3">Metodologia</h1>
           <p className="text-slate-500 dark:text-slate-400 max-w-xl mx-auto">
-            Como o Fake News Verificaton analisa conteúdos e identifica sinais de desinformação, viés e manipulação.
+            Como o Fake News VerificaTon analisa conteúdos e identifica sinais de desinformação, viés e manipulação.
           </p>
         </div>
 

@@ -3,7 +3,7 @@ export default function Footer() {
     <footer className="text-center text-xs text-slate-400 dark:text-slate-500 pb-8 pt-4">
       <div className="max-w-4xl mx-auto px-6">
         <div className="border-t border-slate-200/60 dark:border-slate-700/60 pt-6">
-          <p className="font-medium">Fake News Verificaton — Neutralidade por método</p>
+          <p className="font-medium">Fake News VerificaTon — Neutralidade por método</p>
           <div className="flex flex-wrap justify-center gap-x-4 gap-y-2 mt-3">
             <a href="/sobre" className="hover:text-brand-500 transition">Sobre nós</a>
             <a href="/alerts" className="hover:text-brand-500 transition">Alertas</a>

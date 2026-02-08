@@ -105,7 +105,7 @@ export default function Home() {
   }
 
   const copyWhatsApp = () => {
-    const txt = `Oi! Recebi aquela mensagem e resolvi analisar com o Fake News Verificaton.\nResultado: ${report?.summary?.verdict || 'Inconclusivo'} (risco de fake: ${report?.scores?.fakeProbability || 0}%).\nConfira em: fakenewsverificaton.com.br`
+    const txt = `Oi! Recebi aquela mensagem e resolvi analisar com o Fake News VerificaTon.\nResultado: ${report?.summary?.verdict || 'Inconclusivo'} (risco de fake: ${report?.scores?.fakeProbability || 0}%).\nConfira em: fakenewsverificaton.com.br`
     navigator.clipboard.writeText(txt); setWhatsCopied(true); setTimeout(() => setWhatsCopied(false), 2000)
   }
   const copyReport = () => { navigator.clipboard.writeText(report?.reportMarkdown || ''); alert('Relatório copiado!') }
@@ -128,7 +128,7 @@ export default function Home() {
 
         <div ref={heroRef} className="animate-on-scroll relative z-10 text-center px-6 pt-16 pb-20 max-w-2xl mx-auto">
           <h1 className="text-4xl sm:text-5xl md:text-6xl font-bold text-white/95 leading-tight mb-5 tracking-tight">
-            Fake <span className="text-[#1d9bf0]">News</span> Verificaton
+            Fake <span className="text-[#1d9bf0]">News</span> VerificaTon
           </h1>
           <p className="text-white/50 text-sm sm:text-base leading-relaxed mb-3 max-w-md mx-auto">
             Verifique as informações antes de compartilhar.
@@ -402,7 +402,7 @@ export default function Home() {
         {showNeutrality && (
           <div className="mt-4 p-5 bg-white dark:bg-slate-800 rounded-2xl shadow-sm border border-slate-100 dark:border-slate-700 text-xs text-slate-600 dark:text-slate-300 animate-fade-in leading-relaxed">
             <h4 className="font-semibold mb-2 text-slate-800 dark:text-white">Neutralidade por método (não por opinião)</h4>
-            <p className="mb-2">O Fake News Verificaton não apoia candidatos, partidos ou ideologias. A análise é guiada por método: extraímos as afirmações, avaliamos a evidência disponível, verificamos consistência lógica, apontamos possíveis técnicas de manipulação e sugerimos caminhos para verificação em múltiplas fontes confiáveis.</p>
+            <p className="mb-2">O Fake News VerificaTon não apoia candidatos, partidos ou ideologias. A análise é guiada por método: extraímos as afirmações, avaliamos a evidência disponível, verificamos consistência lógica, apontamos possíveis técnicas de manipulação e sugerimos caminhos para verificação em múltiplas fontes confiáveis.</p>
             <p className="mb-2">Quando não há base suficiente para concluir, o resultado é &quot;Inconclusivo&quot;.</p>
             <p>Análise assistida por IA (Gemini). Não substitui agências profissionais de checagem.</p>
           </div>
