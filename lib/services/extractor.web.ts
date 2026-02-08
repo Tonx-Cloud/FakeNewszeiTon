@@ -1,5 +1,5 @@
 import 'server-only'
-import { JSDOM } from 'jsdom'
+import { parseHTML } from 'linkedom'
 import { Readability } from '@mozilla/readability'
 
 export interface ExtractionResult {
@@ -86,16 +86,18 @@ export async function extractWebContent(url: string): Promise<ExtractionResult> 
   let title = ''
 
   try {
-    const dom = new JSDOM(html, { url })
-    const doc = dom.window.document
+    const { document: doc } = parseHTML(html)
+
+    // Set documentURI for Readability
+    Object.defineProperty(doc, 'documentURI', { value: url })
 
     // Remove noise elements before Readability processes
     const noiseSelectors = ['script', 'style', 'nav', 'footer', 'aside', 'iframe', 'noscript', '.ad', '.ads', '.advertisement', '[role="navigation"]', '[role="banner"]']
-    noiseSelectors.forEach(sel => {
-      doc.querySelectorAll(sel).forEach(el => el.remove())
+    noiseSelectors.forEach((sel: string) => {
+      doc.querySelectorAll(sel).forEach((el: any) => el.remove())
     })
 
-    const reader = new Readability(doc)
+    const reader = new Readability(doc as any)
     const article = reader.parse()
 
     if (article && article.textContent) {
@@ -109,17 +111,16 @@ export async function extractWebContent(url: string): Promise<ExtractionResult> 
   // Fallback: simple heuristic if Readability fails or returns too little
   if (textContent.length < MIN_CONTENT_LENGTH) {
     try {
-      const dom = new JSDOM(html, { url })
-      const doc = dom.window.document
+      const { document: doc2 } = parseHTML(html)
 
       // Remove noise
-      doc.querySelectorAll('script, style, nav, footer, aside, iframe, noscript').forEach(el => el.remove())
+      doc2.querySelectorAll('script, style, nav, footer, aside, iframe, noscript').forEach((el: any) => el.remove())
 
       // Try article/main first, then all <p> tags
-      const mainEl = doc.querySelector('article') || doc.querySelector('main') || doc.querySelector('[role="main"]')
-      const paragraphs = (mainEl || doc.body)?.querySelectorAll('p') || []
+      const mainEl = doc2.querySelector('article') || doc2.querySelector('main') || doc2.querySelector('[role="main"]')
+      const paragraphs = (mainEl || doc2.body)?.querySelectorAll('p') || []
       const texts: string[] = []
-      paragraphs.forEach(p => {
+      paragraphs.forEach((p: any) => {
         const t = p.textContent?.trim()
         if (t && t.length > 20) texts.push(t)
       })
