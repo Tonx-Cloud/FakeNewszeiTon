@@ -1,28 +1,9 @@
 'use client'
-import { useState, useCallback, useEffect } from 'react'
-
-/* ─── Dark mode hook ─── */
-function useDarkMode() {
-  const [dark, setDark] = useState(false)
-  useEffect(() => {
-    const stored = localStorage.getItem('theme')
-    if (stored === 'dark' || (!stored && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
-      setDark(true); document.documentElement.classList.add('dark')
-    }
-  }, [])
-  const toggle = useCallback(() => {
-    setDark(d => {
-      const next = !d
-      document.documentElement.classList.toggle('dark', next)
-      localStorage.setItem('theme', next ? 'dark' : 'light')
-      return next
-    })
-  }, [])
-  return { dark, toggle }
-}
+import { useState, useEffect } from 'react'
+import Nav from '@/components/Nav'
+import Footer from '@/components/Footer'
 
 export default function SubscribePage() {
-  const { dark, toggle } = useDarkMode()
   const [name, setName] = useState('')
   const [email, setEmail] = useState('')
   const [whatsapp, setWhatsapp] = useState('')
@@ -64,14 +45,7 @@ export default function SubscribePage() {
   return (
     <main className="min-h-screen bg-slate-50 dark:bg-slate-900 text-slate-800 dark:text-slate-100 transition-colors">
       {/* Nav */}
-      <nav className="flex items-center justify-between px-6 py-4 max-w-4xl mx-auto">
-        <a href="/" className="text-slate-700 dark:text-slate-200 text-sm font-medium tracking-wide hover:text-brand-600 transition">
-          ← Fake News Verificaton
-        </a>
-        <button onClick={toggle} className="text-slate-400 hover:text-slate-600 dark:hover:text-white transition text-lg" title="Alternar tema">
-          {dark ? '☀️' : '🌙'}
-        </button>
-      </nav>
+      <Nav />
 
       <div className="max-w-md mx-auto px-6 pt-8 pb-16">
         <div className="text-center mb-8">
@@ -168,6 +142,8 @@ export default function SubscribePage() {
           </form>
         )}
       </div>
+
+      <Footer />
     </main>
   )
 }

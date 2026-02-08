@@ -3,6 +3,9 @@ import { useState, useEffect, useRef, useCallback } from 'react'
 import ReactMarkdown from 'react-markdown'
 import remarkGfm from 'remark-gfm'
 import rehypeRaw from 'rehype-raw'
+import { useDarkMode } from '@/components/DarkModeProvider'
+import Nav from '@/components/Nav'
+import Footer from '@/components/Footer'
 
 type TabType = 'text' | 'link' | 'image' | 'audio'
 type LoadingState = 'idle' | 'loading' | 'error' | 'success'
@@ -30,26 +33,6 @@ function useScrollReveal() {
   return ref
 }
 
-/* ─── Dark mode hook ─── */
-function useDarkMode() {
-  const [dark, setDark] = useState(false)
-  useEffect(() => {
-    const stored = localStorage.getItem('theme')
-    if (stored === 'dark' || (!stored && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
-      setDark(true); document.documentElement.classList.add('dark')
-    }
-  }, [])
-  const toggle = useCallback(() => {
-    setDark(d => {
-      const next = !d
-      document.documentElement.classList.toggle('dark', next)
-      localStorage.setItem('theme', next ? 'dark' : 'light')
-      return next
-    })
-  }, [])
-  return { dark, toggle }
-}
-
 /* ─── Tab config ─── */
 const TABS: { key: TabType; label: string; icon: string }[] = [
   { key: 'text', label: 'Texto', icon: '📝' },
@@ -72,7 +55,7 @@ const SOURCES = [
 ]
 
 export default function Home() {
-  const { dark, toggle } = useDarkMode()
+  const { dark } = useDarkMode()
   const [activeTab, setActiveTab] = useState<TabType>('text')
   const [content, setContent] = useState('')
   const [loading, setLoading] = useState<LoadingState>('idle')
@@ -128,19 +111,7 @@ export default function Home() {
       {/* ═══════ HERO ═══════ */}
       <section className="hero-gradient relative overflow-hidden">
         {/* Nav */}
-        <nav className="relative z-10 flex items-center justify-between px-6 py-4 max-w-4xl mx-auto">
-          <a href="/" className="text-white/90 text-sm font-medium tracking-wide">
-            Fake <span className="text-[#1d9bf0]">News</span> Verificaton
-          </a>
-          <div className="flex items-center gap-4">
-            <a href="/alerts" className="text-white/50 text-xs hover:text-white transition">Alertas</a>
-            <a href="/subscribe" className="text-white/50 text-xs hover:text-white transition">Inscrever-se</a>
-            <a href="/auth" className="text-white/50 text-xs hover:text-white transition">Entrar</a>
-            <button onClick={toggle} className="text-white/40 hover:text-white transition text-lg" title="Alternar tema">
-              {dark ? '☀️' : '🌙'}
-            </button>
-          </div>
-        </nav>
+        <Nav variant="hero" />
 
         <div ref={heroRef} className="animate-on-scroll relative z-10 text-center px-6 pt-16 pb-20 max-w-2xl mx-auto">
           <h1 className="text-4xl sm:text-5xl md:text-6xl font-bold text-white/95 leading-tight mb-5 tracking-tight">
@@ -428,9 +399,7 @@ export default function Home() {
       </section>
 
       {/* ═══════ FOOTER ═══════ */}
-      <footer className="text-center text-xs text-slate-400 dark:text-slate-500 pb-8 pt-4">
-        Fake News Verificaton — Neutralidade por metodo
-      </footer>
+      <Footer />
     </main>
   )
 }

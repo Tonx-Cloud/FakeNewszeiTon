@@ -1,6 +1,7 @@
 import './globals.css'
 import React from 'react'
 import type { Metadata } from 'next'
+import { DarkModeProvider } from '@/components/DarkModeProvider'
 
 export const metadata: Metadata = {
   metadataBase: new URL('https://fakenewsverificaton.com.br'),
@@ -28,7 +29,11 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
       <head>
         <link rel="icon" href="/favicon.ico" sizes="any" />
       </head>
-      <body>{children}</body>
+      <body>
+        <DarkModeProvider>
+          {children}
+        </DarkModeProvider>
+      </body>
     </html>
   )
 }
