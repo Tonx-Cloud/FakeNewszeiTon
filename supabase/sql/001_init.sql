@@ -35,8 +35,43 @@ create table trending_items (
   last_seen timestamptz default now()
 );
 
--- RLS and policies
--- profiles: a user can read/write own profile (auth.users.id)
--- analyses: allow insert for anyone, allow select for owner, service role for aggregates
+-- ===== RLS policies =====
+
+-- PROFILES
+alter table profiles enable row level security;
+
+create policy "Users can read own profile"
+  on profiles for select using (auth.uid() = id);
+
+create policy "Users can update own profile"
+  on profiles for update using (auth.uid() = id);
+
+create policy "Service role can manage all profiles"
+  on profiles for all using (auth.role() = 'service_role');
+
+-- Allow upsert from auth callback (insert own row)
+create policy "Users can insert own profile"
+  on profiles for insert with check (auth.uid() = id);
+
+-- ANALYSES
+alter table analyses enable row level security;
+
+-- Anyone (anon) can insert via the API route (service_role key is used server-side)
+create policy "Service role can manage all analyses"
+  on analyses for all using (auth.role() = 'service_role');
+
+create policy "Users can read own analyses"
+  on analyses for select using (auth.uid() = owner_id);
+
+-- TRENDING_ITEMS
+alter table trending_items enable row level security;
+
+-- Public read (anon can see trending)
+create policy "Anyone can read trending items"
+  on trending_items for select using (true);
+
+-- Only service role writes
+create policy "Service role can manage trending items"
+  on trending_items for all using (auth.role() = 'service_role');
 
 -- Note: You need to run recommended Supabase auth setup and link profile IDs with auth.users.id

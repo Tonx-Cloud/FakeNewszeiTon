@@ -28,8 +28,15 @@ export default function Home() {
   const [apiError, setApiError] = useState<ApiError | null>(null)
   const [showNeutrality, setShowNeutrality] = useState(false)
 
+  const MAX_UPLOAD_SIZE = 4_500_000 // ~4.5 MB
+
   const handleAnalyze = async () => {
     if (!content.trim()) return
+    if (content.length > MAX_UPLOAD_SIZE) {
+      setApiError({ ok: false, error: 'TOO_LARGE', message: 'Arquivo muito grande (max ~4.5 MB). Tente um arquivo menor.' })
+      setLoading('error')
+      return
+    }
     setLoading('loading')
     setApiError(null)
     try {
@@ -105,7 +112,7 @@ export default function Home() {
           Analise mensagens do WhatsApp e redes sociais para identificar sinais de desinformacao, vies ou manipulacao — especialmente em periodos de debate politico.
         </p>
         <p className="text-xs text-slate-400">
-          Analise assistida por IA (OpenAI). Nao substitui checagem profissional.
+          Analise assistida por IA (Gemini). Nao substitui checagem profissional.
         </p>
       </section>
 
@@ -210,10 +217,22 @@ export default function Home() {
                 {apiError.error === 'SERVER_MISCONFIG' ? (
                   <div className="mt-2">
                     <p className="text-xs text-amber-700">
-                      Configuracao incompleta: a chave da OpenAI nao esta definida no servidor (Vercel).
+                      Configuracao incompleta: a chave da IA nao esta definida no servidor (Vercel).
                     </p>
                     <p className="text-xs text-amber-600 mt-1">
-                      Se voce e o dono do site, verifique os logs da Vercel e adicione a variavel <code>OPENAI_API_KEY</code> nas configuracoes de ambiente.
+                      Se voce e o dono do site, verifique os logs da Vercel e adicione a variavel <code>GEMINI_API_KEY</code> nas configuracoes de ambiente.
+                    </p>
+                  </div>
+                ) : apiError.error === 'RATE_LIMITED' ? (
+                  <div className="mt-2">
+                    <p className="text-xs text-amber-700">
+                      Muitas requisicoes. Aguarde um minuto antes de tentar novamente.
+                    </p>
+                  </div>
+                ) : apiError.error === 'TOO_LARGE' ? (
+                  <div className="mt-2">
+                    <p className="text-xs text-amber-700">
+                      {apiError.message}
                     </p>
                   </div>
                 ) : (

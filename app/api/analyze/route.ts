@@ -3,16 +3,32 @@ import { z } from 'zod'
 import { isGeminiConfigured } from '../../../lib/gemini'
 import { analyzePipeline } from '../../../lib/analyzePipeline'
 import { createServerSupabase } from '../../../lib/supabaseServer'
+import { checkRateLimit } from '../../../lib/rateLimit'
 
 export const runtime = "nodejs"
 
+// Max payload ~4.5 MB (base64 images/audio)
+const MAX_CONTENT_LENGTH = 4_500_000
+
 const BodySchema = z.object({
   inputType: z.enum(['text', 'link', 'image', 'audio']),
-  content: z.string()
+  content: z.string().max(MAX_CONTENT_LENGTH, 'Conteudo excede o limite de ~4.5 MB')
 })
 
 export async function POST(req: Request) {
   try {
+    // Rate limiting by IP
+    const forwarded = req.headers.get('x-forwarded-for')
+    const ip = forwarded?.split(',')[0]?.trim() || 'unknown'
+    const rl = checkRateLimit(ip)
+    if (!rl.allowed) {
+      return NextResponse.json({
+        ok: false,
+        error: 'RATE_LIMITED',
+        message: 'Muitas requisicoes. Aguarde um minuto.'
+      }, { status: 429, headers: { 'Retry-After': '60' } })
+    }
+
     if (!isGeminiConfigured()) {
       console.error("[api/analyze] GEMINI_API_KEY not configured")
       return NextResponse.json({

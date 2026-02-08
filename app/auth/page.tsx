@@ -1,6 +1,5 @@
 'use client'
 import { useState, useMemo } from 'react'
-import dynamic from 'next/dynamic'
 import { createClient, SupabaseClient } from '@supabase/supabase-js'
 
 function useSupabase(): SupabaseClient | null {
