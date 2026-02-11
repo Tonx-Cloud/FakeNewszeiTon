@@ -388,7 +388,7 @@ export default function Home() {
         <div className="bg-white dark:bg-slate-800 rounded-2xl shadow-md border border-slate-100 dark:border-slate-700 p-6 text-center">
           <h3 className="text-base font-semibold mb-2 dark:text-white">Agora faça a sua parte</h3>
           <p className="text-xs text-slate-500 dark:text-slate-400 mb-5">
-            Compartilhe o resultado com quem te enviou a mensagem. Desinformação afeta pessoas reais.
+            Compartilhe o resultado com quem ENVIOU A MENSAGEM A VOCÊ. Desinformação afeta pessoas reais.
           </p>
           <div className="text-center font-extrabold text-2xl md:text-4xl text-red-600 mb-6">
             TODOS CONTRA AS FAKES NEWS!
