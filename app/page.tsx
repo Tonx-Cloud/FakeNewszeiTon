@@ -76,6 +76,7 @@ export default function Home() {
   const onCaptchaStatusChange = useCallback((s: CaptchaStatus) => setCaptchaStatus(s), [])
 
   const MAX_UPLOAD_SIZE = 4_500_000
+  const hasTurnstileSiteKey = !!process.env.NEXT_PUBLIC_TURNSTILE_SITE_KEY
 
   /* scroll-reveal refs */
   const heroRef = useScrollReveal()
@@ -90,6 +91,10 @@ export default function Home() {
     if (!content.trim()) return
     if (!homeConsentChecked) {
       setApiError({ ok: false, error: 'CONSENT_MISSING', message: 'Para continuar, aceite os Termos e a Política de Privacidade.' })
+      setLoading('error'); return
+    }
+    if (hasTurnstileSiteKey && !turnstileToken) {
+      setApiError({ ok: false, error: 'CAPTCHA_PENDING', message: 'Aguarde a verificação anti-bot carregar. Se não aparecer, tente em aba anônima.' })
       setLoading('error'); return
     }
     if (content.length > MAX_UPLOAD_SIZE) {
@@ -278,6 +283,11 @@ export default function Home() {
               <svg className="spinner w-5 h-5" fill="none" viewBox="0 0 24 24"><circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"/><path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v4a4 4 0 00-4 4H4z"/></svg>
               {activeTab === 'audio' ? 'Transcrevendo e analisando...' : 'Analisando...'}
             </>
+          ) : hasTurnstileSiteKey && !turnstileToken && captchaStatus !== 'verified' ? (
+            <>
+              <svg className="spinner w-4 h-4 opacity-60" fill="none" viewBox="0 0 24 24"><circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"/><path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v4a4 4 0 00-4 4H4z"/></svg>
+              <span className="opacity-80">Aguardando verificação...</span>
+            </>
           ) : 'Analisar'}
         </button>
 
@@ -294,6 +304,7 @@ export default function Home() {
                    apiError.error === 'TOO_LARGE' ? apiError.message :
                    apiError.error === 'CONSENT_MISSING' ? 'Para continuar, aceite os Termos e a Política de Privacidade.' :
                    apiError.error === 'CAPTCHA_FAILED' ? 'Verificação anti-bot falhou. Recarregue a página ou tente em aba anônima (extensões podem interferir).' :
+                   apiError.error === 'CAPTCHA_PENDING' ? 'Aguarde a verificação anti-bot carregar. Se não aparecer, tente em aba anônima (sem extensões).' :
                    'Servidor não conseguiu analisar. Tente novamente.'}
                 </p>
               </div>
