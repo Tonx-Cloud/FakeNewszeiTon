@@ -3,7 +3,6 @@ import { isGeminiConfigured } from '@/lib/gemini'
 import { analyzePipeline } from '@/lib/analyzePipeline'
 import { createServerSupabase } from '@/lib/supabaseServer'
 import { checkRateLimitAsync } from '@/lib/rateLimitUpstash'
-import { verifyTurnstile } from '@/lib/auth/turnstile'
 import { analyzeSchema, sanitizeForLLM, isValidUrl } from '@/lib/validations'
 import { extractFromUrl, isYouTubeUrl } from '@/lib/services/extractor'
 import { extractAudioTranscript } from '@/lib/services/extractor.audio'
@@ -57,29 +56,8 @@ export async function POST(req: Request) {
       }, { status: 429, headers: { 'Retry-After': '60' } })
     }
 
-    // ── 2. Turnstile verification (bypass with API key for server-to-server) ──
+    // ── 2. Parse body ──
     const body = await req.json()
-    const internalApiKey = req.headers.get('x-api-key')
-    const serverBypass = internalApiKey && process.env.ANALYZE_API_KEY && internalApiKey === process.env.ANALYZE_API_KEY
-
-    if (!serverBypass) {
-      console.log(`[api/analyze] Turnstile token received: ${body.turnstileToken ? `yes (${body.turnstileToken.length} chars)` : 'NO TOKEN'}`)
-      const turnstileResult = await verifyTurnstile(body.turnstileToken, ip)
-      if (!turnstileResult.success) {
-        const isMissing = turnstileResult.errorCodes.includes('missing-input-response')
-        console.warn(`[api/analyze] Turnstile FAILED: codes=${turnstileResult.errorCodes.join(', ')}, tokenPresent=${!!body.turnstileToken}`)
-        return NextResponse.json({
-          ok: false,
-          error: 'CAPTCHA_FAILED',
-          message: isMissing
-            ? 'Verificação anti-bot não foi carregada. Recarregue a página ou tente em aba anônima.'
-            : 'Verificação anti-bot falhou. Recarregue a página e tente novamente.',
-          details: { codes: turnstileResult.errorCodes },
-        }, { status: 403 })
-      }
-    } else {
-      console.log('[api/analyze] Turnstile bypassed via API key')
-    }
 
     // ── 3. Validate input ──
     const parsed = analyzeSchema.safeParse(body)

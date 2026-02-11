@@ -1,7 +1,6 @@
 import { NextResponse } from 'next/server'
 import { createServerSupabase } from '@/lib/supabaseServer'
 import { checkRateLimitAsync } from '@/lib/rateLimitUpstash'
-import { verifyTurnstile } from '@/lib/auth/turnstile'
 import { alertsSuggestSchema } from '@/lib/validations'
 
 export async function POST(req: Request) {
@@ -18,15 +17,6 @@ export async function POST(req: Request) {
     }
 
     const body = await req.json()
-
-    // ── Turnstile verification ──
-    const captcha = await verifyTurnstile(body.turnstileToken, ip)
-    if (!captcha.success) {
-      return NextResponse.json(
-        { ok: false, error: 'CAPTCHA_FAILED', message: 'Confirme que você não é um robô e tente novamente.' },
-        { status: 403 },
-      )
-    }
 
     // ── Validate with Zod ──
     const parsed = alertsSuggestSchema.safeParse(body)

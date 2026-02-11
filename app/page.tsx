@@ -1,12 +1,11 @@
 'use client'
-import { useState, useEffect, useRef, useCallback } from 'react'
+import { useState, useEffect, useRef } from 'react'
 import ReactMarkdown from 'react-markdown'
 import remarkGfm from 'remark-gfm'
 import rehypeRaw from 'rehype-raw'
 import { useDarkMode } from '@/components/DarkModeProvider'
 import Nav from '@/components/Nav'
 import Footer from '@/components/Footer'
-import CaptchaWrapper, { type CaptchaStatus } from '@/components/auth/captcha-wrapper'
 
 type TabType = 'text' | 'link' | 'image' | 'audio'
 type LoadingState = 'idle' | 'loading' | 'error' | 'success'
@@ -65,18 +64,9 @@ export default function Home() {
   const [showNeutrality, setShowNeutrality] = useState(false)
   const [pixCopied, setPixCopied] = useState(false)
   const [whatsCopied, setWhatsCopied] = useState(false)
-  const [turnstileToken, setTurnstileToken] = useState('')
-  const [captchaKey, setCaptchaKey] = useState(0)
   const [homeConsentChecked, setHomeConsentChecked] = useState(false)
-  const [captchaStatus, setCaptchaStatus] = useState<CaptchaStatus>('loading')
-
-  const onCaptchaVerify = useCallback((token: string) => setTurnstileToken(token), [])
-  const onCaptchaExpire = useCallback(() => { setTurnstileToken(''); setCaptchaStatus('ready') }, [])
-  const onCaptchaError = useCallback(() => { setTurnstileToken('') }, [])
-  const onCaptchaStatusChange = useCallback((s: CaptchaStatus) => setCaptchaStatus(s), [])
 
   const MAX_UPLOAD_SIZE = 4_500_000
-  const hasTurnstileSiteKey = !!process.env.NEXT_PUBLIC_TURNSTILE_SITE_KEY
 
   /* scroll-reveal refs */
   const heroRef = useScrollReveal()
@@ -93,23 +83,17 @@ export default function Home() {
       setApiError({ ok: false, error: 'CONSENT_MISSING', message: 'Para continuar, aceite os Termos e a Política de Privacidade.' })
       setLoading('error'); return
     }
-    if (hasTurnstileSiteKey && !turnstileToken) {
-      setApiError({ ok: false, error: 'CAPTCHA_PENDING', message: 'Aguarde a verificação anti-bot carregar. Se não aparecer, tente em aba anônima.' })
-      setLoading('error'); return
-    }
     if (content.length > MAX_UPLOAD_SIZE) {
       setApiError({ ok: false, error: 'TOO_LARGE', message: 'Arquivo muito grande (máx. ~4.5 MB). Tente um menor.' })
       setLoading('error'); return
     }
     setLoading('loading'); setApiError(null)
     try {
-      const res = await fetch('/api/analyze', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ inputType: activeTab, content, turnstileToken: turnstileToken || undefined }) })
+      const res = await fetch('/api/analyze', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ inputType: activeTab, content }) })
       const data = await res.json()
       if (!res.ok || !data.ok) { setApiError(data as ApiError); setLoading('error') }
       else { setReport(data as ReportResult); setLoading('success') }
-      // Reset captcha on error
-      if (!res.ok || !data.ok) { setCaptchaKey(k => k + 1); setTurnstileToken('') }
-    } catch { setApiError({ ok: false, error: 'NETWORK_ERROR', message: 'Erro de conexão. Tente novamente.' }); setLoading('error'); setCaptchaKey(k => k + 1); setTurnstileToken('') }
+    } catch { setApiError({ ok: false, error: 'NETWORK_ERROR', message: 'Erro de conexão. Tente novamente.' }); setLoading('error') }
   }
 
   const copyWhatsApp = () => {
@@ -245,16 +229,6 @@ export default function Home() {
           )}
         </div>
 
-        {/* Captcha */}
-        <CaptchaWrapper
-          onVerify={onCaptchaVerify}
-          onExpire={onCaptchaExpire}
-          onError={onCaptchaError}
-          onStatusChange={onCaptchaStatusChange}
-          resetKey={captchaKey}
-          className="mt-4"
-        />
-
         {/* LGPD Consent */}
         <div className="mt-4 flex items-start gap-3">
           <input
@@ -283,11 +257,6 @@ export default function Home() {
               <svg className="spinner w-5 h-5" fill="none" viewBox="0 0 24 24"><circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"/><path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v4a4 4 0 00-4 4H4z"/></svg>
               {activeTab === 'audio' ? 'Transcrevendo e analisando...' : 'Analisando...'}
             </>
-          ) : hasTurnstileSiteKey && !turnstileToken && captchaStatus !== 'verified' ? (
-            <>
-              <svg className="spinner w-4 h-4 opacity-60" fill="none" viewBox="0 0 24 24"><circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"/><path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v4a4 4 0 00-4 4H4z"/></svg>
-              <span className="opacity-80">Aguardando verificação...</span>
-            </>
           ) : 'Analisar'}
         </button>
 
@@ -303,8 +272,6 @@ export default function Home() {
                    apiError.error === 'RATE_LIMITED' ? 'Muitas requisições. Aguarde um minuto.' :
                    apiError.error === 'TOO_LARGE' ? apiError.message :
                    apiError.error === 'CONSENT_MISSING' ? 'Para continuar, aceite os Termos e a Política de Privacidade.' :
-                   apiError.error === 'CAPTCHA_FAILED' ? 'Verificação anti-bot falhou. Recarregue a página ou tente em aba anônima (extensões podem interferir).' :
-                   apiError.error === 'CAPTCHA_PENDING' ? 'Aguarde a verificação anti-bot carregar. Se não aparecer, tente em aba anônima (sem extensões).' :
                    'Servidor não conseguiu analisar. Tente novamente.'}
                 </p>
               </div>

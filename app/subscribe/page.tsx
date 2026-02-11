@@ -1,8 +1,7 @@
 'use client'
-import { useState, useCallback } from 'react'
+import { useState } from 'react'
 import Nav from '@/components/Nav'
 import Footer from '@/components/Footer'
-import CaptchaWrapper from '@/components/auth/captcha-wrapper'
 
 type ViewMode = 'subscribe' | 'unsubscribe'
 type Status = 'idle' | 'loading' | 'success' | 'error'
@@ -20,21 +19,14 @@ export default function SubscribePage() {
   const [unsubEmail, setUnsubEmail] = useState('')
 
   /* ── shared state ── */
-  const [turnstileToken, setTurnstileToken] = useState('')
-  const [captchaKey, setCaptchaKey] = useState(0)
   const [status, setStatus] = useState<Status>('idle')
   const [errorMsg, setErrorMsg] = useState('')
   const [successMsg, setSuccessMsg] = useState('')
-
-  const onCaptchaVerify = useCallback((token: string) => setTurnstileToken(token), [])
-  const onCaptchaExpire = useCallback(() => setTurnstileToken(''), [])
 
   const resetState = () => {
     setStatus('idle')
     setErrorMsg('')
     setSuccessMsg('')
-    setCaptchaKey(k => k + 1)
-    setTurnstileToken('')
   }
 
   /* ── Inscrição ── */
@@ -52,20 +44,19 @@ export default function SubscribePage() {
           email: email.trim(),
           whatsapp: whatsapp.trim() || null,
           acceptedTerms: true,
-          turnstileToken: turnstileToken || undefined,
         }),
       })
       const data = await res.json()
       if (!res.ok || !data.ok) {
         setErrorMsg(data.message || 'Erro ao cadastrar. Tente novamente.')
-        setStatus('error'); setCaptchaKey(k => k + 1); setTurnstileToken('')
+        setStatus('error')
       } else {
         setSuccessMsg(data.message || 'Verifique seu e-mail para confirmar a inscrição.')
         setStatus('success')
       }
     } catch {
       setErrorMsg('Erro de conexão. Tente novamente.')
-      setStatus('error'); setCaptchaKey(k => k + 1); setTurnstileToken('')
+      setStatus('error')
     }
   }
 
@@ -80,20 +71,19 @@ export default function SubscribePage() {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           email: unsubEmail.trim(),
-          turnstileToken: turnstileToken || undefined,
         }),
       })
       const data = await res.json()
       if (!res.ok || !data.ok) {
         setErrorMsg(data.message || 'Erro ao processar cancelamento.')
-        setStatus('error'); setCaptchaKey(k => k + 1); setTurnstileToken('')
+        setStatus('error')
       } else {
         setSuccessMsg(data.message || 'Verifique seu e-mail para confirmar o cancelamento.')
         setStatus('success')
       }
     } catch {
       setErrorMsg('Erro de conexão. Tente novamente.')
-      setStatus('error'); setCaptchaKey(k => k + 1); setTurnstileToken('')
+      setStatus('error')
     }
   }
 
@@ -189,8 +179,6 @@ export default function SubscribePage() {
                 </div>
               </div>
 
-              <CaptchaWrapper onVerify={onCaptchaVerify} onExpire={onCaptchaExpire} resetKey={captchaKey} className="my-2" />
-
               {status === 'error' && errorMsg && (
                 <div className="p-4 bg-amber-50 dark:bg-amber-900/20 border border-amber-200 dark:border-amber-800 rounded-2xl animate-fade-in">
                   <div className="flex items-start gap-3">
@@ -230,8 +218,6 @@ export default function SubscribePage() {
                 <input type="email" value={unsubEmail} onChange={(e) => setUnsubEmail(e.target.value)} placeholder="seu@email.com" required
                   className="w-full px-4 py-2.5 bg-slate-50 dark:bg-slate-700/50 border border-slate-200 dark:border-slate-600 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-brand-500/50 dark:text-white placeholder-slate-400" />
               </div>
-
-              <CaptchaWrapper onVerify={onCaptchaVerify} onExpire={onCaptchaExpire} resetKey={captchaKey} className="my-2" />
 
               {status === 'error' && errorMsg && (
                 <div className="p-4 bg-amber-50 dark:bg-amber-900/20 border border-amber-200 dark:border-amber-800 rounded-2xl animate-fade-in">

@@ -12,7 +12,6 @@ export const analyzeSchema = z.object({
   content: z.string()
     .min(1, 'Conteúdo não pode estar vazio.')
     .max(4_500_000, 'Conteúdo excede o limite de ~4.5 MB.'),
-  turnstileToken: z.string().optional(),
 })
 
 export type AnalyzeInput = z.infer<typeof analyzeSchema>
@@ -29,7 +28,6 @@ export const subscribeSchema = z.object({
   acceptedTerms: z.literal(true, {
     errorMap: () => ({ message: 'Você precisa aceitar os Termos e Política de Privacidade.' }),
   }),
-  turnstileToken: z.string().optional(),
 })
 
 export type SubscribeInput = z.infer<typeof subscribeSchema>
@@ -38,7 +36,6 @@ export type SubscribeInput = z.infer<typeof subscribeSchema>
 export const alertsSuggestSchema = z.object({
   title: z.string().min(3, 'Título muito curto.').max(500, 'Título muito longo.'),
   description: z.string().max(2000, 'Descrição muito longa.').optional(),
-  turnstileToken: z.string().optional(),
 })
 
 export type AlertsSuggestInput = z.infer<typeof alertsSuggestSchema>

@@ -1,14 +1,12 @@
 import { NextResponse } from 'next/server'
 import { createServerSupabase } from '@/lib/supabaseServer'
 import { checkRateLimitAsync } from '@/lib/rateLimitUpstash'
-import { verifyTurnstile } from '@/lib/auth/turnstile'
 import { createSignedToken } from '@/lib/tokens'
 import { buildCancelConfirmationEmail, sendEmail } from '@/lib/resend'
 import { z } from 'zod'
 
 const cancelSchema = z.object({
   email: z.string().email('E-mail inválido.'),
-  turnstileToken: z.string().optional(),
 })
 
 export async function POST(req: Request) {
@@ -25,15 +23,6 @@ export async function POST(req: Request) {
     }
 
     const body = await req.json()
-
-    // ── Turnstile ──
-    const captcha = await verifyTurnstile(body.turnstileToken, ip)
-    if (!captcha.success) {
-      return NextResponse.json(
-        { ok: false, error: 'CAPTCHA_FAILED', message: 'Verificação anti-bot falhou. Recarregue a página.' },
-        { status: 403 },
-      )
-    }
 
     // ── Validate ──
     const parsed = cancelSchema.safeParse(body)
