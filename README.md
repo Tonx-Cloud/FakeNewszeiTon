@@ -11,12 +11,13 @@ Ferramenta de análise de desinformação assistida por IA. Recebe conteúdo (te
 - **Next.js 14** (App Router, TypeScript strict)
 - **Tailwind CSS 3** (dark mode, glassmorphism, animations)
 - **Gemini 2.0 Flash** (`@google/generative-ai`) — análise multimodal (texto, imagem, áudio)
+- **Whisper-SRT Portal** — transcrição de áudio via Whisper AI (JWT auth, upload → poll → SRT → texto)
 - **Supabase** — Auth (magic link), PostgreSQL (profiles, analyses, trending_items, subscribers)
 - **Resend** — e-mails transacionais (confirmação, cancelamento, digest)
 - **Cloudflare Turnstile** — anti-bot (CAPTCHA invisível)
 - **Upstash Redis** — rate limiting
 - **react-markdown** + remark-gfm + rehype-raw — renderização de relatórios em Markdown
-- **Vercel** — deploy automático + cron
+- **Vercel** — deploy automático + cron (`maxDuration: 180s` para análise de áudio)
 
 ## Setup local
 
@@ -53,6 +54,9 @@ Veja `.env.example` para a lista completa.
 | `TURNSTILE_SECRET_KEY` | Chave secreta Cloudflare Turnstile |
 | `UPSTASH_REDIS_REST_URL` | URL do Redis Upstash |
 | `UPSTASH_REDIS_REST_TOKEN` | Token do Redis Upstash |
+| `WHISPER_EMAIL` | Email de login no Whisper-SRT Portal (auth JWT) |
+| `WHISPER_PASSWORD` | Senha de login no Whisper-SRT Portal |
+| `WHISPER_SRT_API_KEY` | *(opcional)* API Key do Whisper-SRT (fallback se JWT falhar) |
 
 ## Banco de dados (Supabase)
 
@@ -82,7 +86,7 @@ Todas com RLS ativado. Service role gerencia via API routes.
 
 | Endpoint | Método | Descrição |
 |----------|--------|-----------|
-| `/api/analyze` | POST | Análise de conteúdo (rate limit, Turnstile, max 4.5 MB) |
+| `/api/analyze` | POST | Análise de conteúdo: texto, link, imagem ou áudio (rate limit, Turnstile, max 4.5 MB) |
 | `/api/subscribe` | POST | Inscrição — envia e-mail de confirmação (double opt-in) |
 | `/api/subscribe/confirm` | GET | Confirma inscrição via token assinado |
 | `/api/subscribe/cancel` | POST | Solicita cancelamento — envia e-mail de confirmação |
@@ -116,6 +120,23 @@ O pipeline de análise (`lib/analyzePipeline.ts`) gera um relatório Markdown es
 4. **Fontes externas** — links para agências de checagem relevantes
 5. **Recomendações** — passos para o usuário verificar por conta própria
 6. **Pesquise você mesmo** — queries sugeridas
+
+## Pipeline de Áudio (Whisper-SRT)
+
+Quando o usuário envia um arquivo de áudio, o sistema executa um pipeline adicional antes da análise Gemini:
+
+1. **Decode** — data-URL (base64) → Buffer + detecção de mime/extensão
+2. **Auth** — JWT login no Whisper-SRT Portal (cache de 7h) ou fallback via API Key
+3. **Upload** — envio do áudio via `POST /api/jobs` (FormData, modelo `small`, idioma `pt`)
+4. **Poll** — verifica `GET /api/jobs/{id}` a cada 3s (máx. 60 tentativas = 180s)
+5. **Download** — baixa o `.srt` gerado via `GET /api/jobs/{id}/download`
+6. **Parse** — SRT → segmentos JSON → texto corrido (filtra instrumentais 🎵)
+7. **Análise** — texto transcrito enviado ao Gemini como `audio_transcript` com prompt dedicado
+
+Formatos suportados: MP3, WAV, M4A, OGG, WebM, FLAC, AAC (máx. 4.5 MB).
+
+Código: `lib/services/extractor.audio.ts`  
+API: [Whisper-SRT Portal](https://github.com/Tonx-Cloud/whisper-srt-portal)
 
 ## Segurança
 
