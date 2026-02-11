@@ -10,14 +10,34 @@ import { extractAudioTranscript } from '@/lib/services/extractor.audio'
 
 export const runtime = 'nodejs'
 
-/* Preflight CORS — evita 405 em requests cross-origin */
-export async function OPTIONS() {
+/** Allowed origins for CORS */
+const ALLOWED_ORIGINS = [
+  'https://fakenewsverificaton.com.br',
+  'https://www.fakenewsverificaton.com.br',
+  'https://fakenewsverificaton.vercel.app',
+]
+
+function getCorsOrigin(req: Request): string {
+  const origin = req.headers.get('origin') || ''
+  if (ALLOWED_ORIGINS.includes(origin)) return origin
+  // Allow any vercel preview deploy
+  if (origin.endsWith('.vercel.app')) return origin
+  return ALLOWED_ORIGINS[0]
+}
+
+const CORS_HEADERS = {
+  'Access-Control-Allow-Methods': 'POST, OPTIONS',
+  'Access-Control-Allow-Headers': 'Content-Type, X-API-Key, X-Requested-With, Authorization',
+  'Access-Control-Max-Age': '86400',
+}
+
+/* Preflight CORS */
+export async function OPTIONS(req: Request) {
   return new Response(null, {
     status: 204,
     headers: {
-      'Access-Control-Allow-Origin': '*',
-      'Access-Control-Allow-Methods': 'POST, OPTIONS',
-      'Access-Control-Allow-Headers': 'Content-Type',
+      'Access-Control-Allow-Origin': getCorsOrigin(req),
+      ...CORS_HEADERS,
     },
   })
 }
@@ -37,18 +57,27 @@ export async function POST(req: Request) {
       }, { status: 429, headers: { 'Retry-After': '60' } })
     }
 
-    // ── 2. Turnstile verification ──
+    // ── 2. Turnstile verification (bypass with API key for server-to-server) ──
     const body = await req.json()
-    const turnstileResult = await verifyTurnstile(body.turnstileToken, ip)
-    if (!turnstileResult.success) {
-      const isMissing = turnstileResult.errorCodes.includes('missing-input-response')
-      return NextResponse.json({
-        ok: false,
-        error: 'CAPTCHA_FAILED',
-        message: isMissing
-          ? 'Verificação anti-bot não foi carregada. Recarregue a página ou tente em aba anônima.'
-          : 'Verificação anti-bot falhou. Recarregue a página e tente novamente.',
-      }, { status: 403 })
+    const internalApiKey = req.headers.get('x-api-key')
+    const serverBypass = internalApiKey && process.env.ANALYZE_API_KEY && internalApiKey === process.env.ANALYZE_API_KEY
+
+    if (!serverBypass) {
+      const turnstileResult = await verifyTurnstile(body.turnstileToken, ip)
+      if (!turnstileResult.success) {
+        const isMissing = turnstileResult.errorCodes.includes('missing-input-response')
+        console.warn(`[api/analyze] Turnstile failed: ${turnstileResult.errorCodes.join(', ')}`)
+        return NextResponse.json({
+          ok: false,
+          error: 'CAPTCHA_FAILED',
+          message: isMissing
+            ? 'Verificação anti-bot não foi carregada. Recarregue a página ou tente em aba anônima.'
+            : 'Verificação anti-bot falhou. Recarregue a página e tente novamente.',
+          details: { codes: turnstileResult.errorCodes },
+        }, { status: 403 })
+      }
+    } else {
+      console.log('[api/analyze] Turnstile bypassed via API key')
     }
 
     // ── 3. Validate input ──

@@ -57,6 +57,7 @@ Veja `.env.example` para a lista completa.
 | `WHISPER_EMAIL` | Email de login no Whisper-SRT Portal (auth JWT) |
 | `WHISPER_PASSWORD` | Senha de login no Whisper-SRT Portal |
 | `WHISPER_SRT_API_KEY` | *(opcional)* API Key do Whisper-SRT (fallback se JWT falhar) |
+| `ANALYZE_API_KEY` | *(opcional)* Chave para bypass do Turnstile em chamadas server-to-server |
 
 ## Banco de dados (Supabase)
 
@@ -140,12 +141,38 @@ API: [Whisper-SRT Portal](https://github.com/Tonx-Cloud/whisper-srt-portal)
 
 ## Segurança
 
-- **CAPTCHA:** Cloudflare Turnstile em análise e inscrição
+- **CAPTCHA:** Cloudflare Turnstile em análise e inscrição (auto-retry 3x, timeout 10s)
+- **CSP:** Content Security Policy configurada para permitir apenas Cloudflare challenges, Supabase e Gemini
+- **CORS:** Origins restritos (domínios de produção + Vercel previews)
+- **API Key bypass:** Chamadas server-to-server podem enviar `X-API-Key` para pular Turnstile
 - **Rate Limiting:** Upstash Redis (10 req/min por IP na análise, 5 req/min na inscrição)
 - **Tokens assinados:** HMAC-SHA256 com expiração para confirmação/cancelamento
 - **Zod:** Validação de todos os inputs
 - **RLS:** Row Level Security em todas as tabelas Supabase
 - **LGPD:** Double opt-in, opt-out com eliminação de dados, política de privacidade
+
+## Troubleshooting
+
+### Erro 403 / CAPTCHA_FAILED
+
+O Cloudflare Turnstile renderiza um iframe com desafios anti-bot. Se o widget não carregar, nenhum token é gerado e a API retorna 403.
+
+**Causas comuns:**
+
+| Causa | Solução |
+|-------|--------|
+| Extensão do navegador (ad-blocker, privacy badger, etc.) | Testar em **aba anônima** (sem extensões) |
+| Iframe sandboxed (`about:blank` sem `allow-scripts`) | Garantir que o site não está dentro de iframe com sandbox restritivo |
+| CSP bloqueando `challenges.cloudflare.com` | Verificar headers CSP no `next.config.js` |
+| `TURNSTILE_SECRET_KEY` não configurada | Verificar env vars no Vercel |
+| Token expirado (clicou muito devagar)  | O widget tem auto-refresh; recarregue a página |
+
+**Diagnóstico (console):**
+- `Blocked script execution in 'about:blank'` → extensão ou sandbox
+- `content.js` / `debug.js` errors → extensão do navegador
+- `script-src was not explicitly set` → CSP configurada (normal, usa `default-src` como fallback)
+
+**Para chamadas server-to-server:** envie header `X-API-Key` com o valor de `ANALYZE_API_KEY` para pular a verificação do Turnstile.
 
 ## Cron
 
