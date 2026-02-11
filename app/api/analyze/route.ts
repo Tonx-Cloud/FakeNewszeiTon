@@ -63,10 +63,11 @@ export async function POST(req: Request) {
     const serverBypass = internalApiKey && process.env.ANALYZE_API_KEY && internalApiKey === process.env.ANALYZE_API_KEY
 
     if (!serverBypass) {
+      console.log(`[api/analyze] Turnstile token received: ${body.turnstileToken ? `yes (${body.turnstileToken.length} chars)` : 'NO TOKEN'}`)
       const turnstileResult = await verifyTurnstile(body.turnstileToken, ip)
       if (!turnstileResult.success) {
         const isMissing = turnstileResult.errorCodes.includes('missing-input-response')
-        console.warn(`[api/analyze] Turnstile failed: ${turnstileResult.errorCodes.join(', ')}`)
+        console.warn(`[api/analyze] Turnstile FAILED: codes=${turnstileResult.errorCodes.join(', ')}, tokenPresent=${!!body.turnstileToken}`)
         return NextResponse.json({
           ok: false,
           error: 'CAPTCHA_FAILED',
