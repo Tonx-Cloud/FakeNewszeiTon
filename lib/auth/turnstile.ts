@@ -34,16 +34,16 @@ export async function verifyTurnstile(token: string | undefined, ip?: string): P
   }
 
   try {
-    const body: Record<string, string> = {
-      secret,
-      response: token,
-    }
-    if (ip) body.remoteip = ip
+    // Use URLSearchParams (form-encoded) as recommended by Cloudflare docs
+    const formData = new URLSearchParams()
+    formData.append('secret', secret)
+    formData.append('response', token)
+    if (ip) formData.append('remoteip', ip)
 
     const res = await fetch(TURNSTILE_VERIFY_URL, {
       method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(body),
+      headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+      body: formData.toString(),
     })
 
     if (!res.ok) {
