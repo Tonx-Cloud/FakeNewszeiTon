@@ -10,7 +10,7 @@ Ferramenta de análise de desinformação assistida por IA. Recebe conteúdo (te
 
 - **Next.js 14** (App Router, TypeScript strict)
 - **Tailwind CSS 3** (dark mode, glassmorphism, animations)
-- **Gemini 2.0 Flash** (`@google/generative-ai`) — análise multimodal (texto, imagem, áudio)
+- **Gemini 2.5 Flash** (`@google/generative-ai`) — análise multimodal (texto, imagem, áudio)
 - **Whisper-SRT Portal** — transcrição de áudio via Whisper AI (JWT auth, upload → poll → SRT → texto)
 - **Supabase** — Auth (magic link), PostgreSQL (profiles, analyses, trending_items, subscribers)
 - **Resend** — e-mails transacionais (confirmação, cancelamento, digest)
@@ -41,7 +41,7 @@ Veja `.env.example` para a lista completa.
 | Variável | Descrição |
 |----------|-----------|
 | `GEMINI_API_KEY` | Chave da API Google Gemini |
-| `GEMINI_MODEL` | Modelo (default: `gemini-2.0-flash`) |
+| `GEMINI_MODEL` | Modelo (default: `gemini-2.5-flash`) |
 | `NEXT_PUBLIC_SUPABASE_URL` | URL do projeto Supabase |
 | `NEXT_PUBLIC_SUPABASE_ANON_KEY` | Chave pública (anon) do Supabase |
 | `SUPABASE_SERVICE_ROLE_KEY` | Chave service_role (server-side) |

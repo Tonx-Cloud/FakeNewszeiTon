@@ -157,7 +157,7 @@ export async function analyzePipeline(inputType: string, content: string) {
   }
 
   const genai = getGemini()
-  const model = genai.getGenerativeModel({ model: process.env.GEMINI_MODEL || 'gemini-2.0-flash' })
+  const model = genai.getGenerativeModel({ model: process.env.GEMINI_MODEL || 'gemini-2.5-flash' })
 
   // Build parts array for Gemini (supports multimodal)
   const parts: any[] = []

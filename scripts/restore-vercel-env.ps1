@@ -22,8 +22,8 @@ $vars["SUPABASE_SERVICE_ROLE_KEY"]   = Read-Host "SUPABASE_SERVICE_ROLE_KEY (ser
 Write-Host ""
 Write-Host "── Google Gemini (aistudio.google.com/apikey) ──" -ForegroundColor Green
 $vars["GEMINI_API_KEY"]  = Read-Host "GEMINI_API_KEY (AIza...)"
-$vars["GEMINI_MODEL"]    = "gemini-2.0-flash"
-Write-Host "  GEMINI_MODEL = gemini-2.0-flash (padrão)" -ForegroundColor DarkGray
+$vars["GEMINI_MODEL"]    = "gemini-2.5-flash"
+Write-Host "  GEMINI_MODEL = gemini-2.5-flash (padrão)" -ForegroundColor DarkGray
 
 Write-Host ""
 Write-Host "── Cloudflare Turnstile ──" -ForegroundColor Green

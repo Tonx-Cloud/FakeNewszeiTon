@@ -16,7 +16,7 @@ if ([string]::IsNullOrEmpty($env:NEW_SUPABASE_SERVICE_ROLE_KEY)) { throw "set NE
 if ([string]::IsNullOrEmpty($env:NEW_PUBLIC_APP_URL)) { throw "set NEW_PUBLIC_APP_URL" }
 if ([string]::IsNullOrEmpty($env:NEW_CRON_SECRET)) { throw "set NEW_CRON_SECRET" }
 if ([string]::IsNullOrEmpty($env:NEW_UNSUB_SECRET)) { throw "set NEW_UNSUB_SECRET" }
-$env:NEW_GEMINI_MODEL = if ($env:NEW_GEMINI_MODEL) { $env:NEW_GEMINI_MODEL } else { "gemini-2.0-flash" }
+$env:NEW_GEMINI_MODEL = if ($env:NEW_GEMINI_MODEL) { $env:NEW_GEMINI_MODEL } else { "gemini-2.5-flash" }
 $env:NEW_FROM_EMAIL = if ($env:NEW_FROM_EMAIL) { $env:NEW_FROM_EMAIL } else { "FakeNewsZeiTon <onboarding@resend.dev>" }
 
 function Get-ProjectId {
